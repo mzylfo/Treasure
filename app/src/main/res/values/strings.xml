@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Treasure</string>
+    <string name="label">Insert email</string>
+    <string name="log_in">Log In</string>
+    <string name="login_description">Log in to continue</string>
+    <string name="insert_email">Insert e-mail here</string>
+    <string name="insert_password">Insert password here</string>
+    <string name="forget_button">Forgot passsword?</string>
+    <string name="Log_in">Log in</string>
+    <string name="log_in_with_google">Log in with Google</string>
+</resources>
