@@ -45,41 +45,47 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputEmail"
-            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin"
-            android:background="#05000000"
             android:hint="@string/insert_email"
-            android:padding="@dimen/margin"
-            app:startIconDrawable="@drawable/baseline_alternate_email_24">
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            style="?attr/textInputOutlinedStyle"
+            android:background="#05000000"
+            app:startIconDrawable="@drawable/baseline_alternate_email_24"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEmail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="#00000000"/>
+
+
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputPassword"
-            style="?attr/textInputOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:background="#05000000"
-
             android:hint="@string/insert_password"
-            app:endIconMode="password_toggle"
-            app:startIconDrawable="@drawable/baseline_password_24">
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            style="?attr/textInputOutlinedStyle"
+            android:background="#05000000"
+            app:startIconDrawable="@drawable/baseline_password_24"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:background="#00000000"/>
+
+
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,16 +99,18 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="@string/log_in"
-            android:layout_marginTop="@dimen/margin"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_gravity="center"
             />
 
         <Button
-            style="?attr/materialIconButtonStyle"
             android:id="@+id/iconButton"
+            style="?attr/materialIconButtonStyle"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,7 +128,7 @@
             android:id="@+id/outlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up"
+            android:text="@string/sign_up"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             />
