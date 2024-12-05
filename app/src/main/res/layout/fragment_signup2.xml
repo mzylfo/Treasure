@@ -1,0 +1,148 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupFragment"
+    android:background="@color/yellow_app"
+    android:id="@+id/signUpFragment">
+
+    <ImageView
+        android:id="@+id/imageSignUp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/user_signup"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/logo_of_the_application"
+        android:padding="5dp"
+        app:tint="@color/white"/>
+    <LinearLayout
+        android:id="@+id/main2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageSignUp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Altri elementi del layout -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin"
+            android:text="@string/create_account"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            app:icon="@drawable/google"
+            android:id="@+id/outlinedButtonGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_with_google"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/insert_your_name_here"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            style="?attr/textInputOutlinedStyle"
+            android:background="#05000000"
+            app:startIconDrawable="@drawable/baseline_drive_file_rename_outline_24"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputNewUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/insert_email"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            style="?attr/textInputOutlinedStyle"
+            android:background="#05000000"
+            app:startIconDrawable="@drawable/baseline_alternate_email_24"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputNewEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/insert_password"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            style="?attr/textInputOutlinedStyle"
+            android:background="#05000000"
+            app:startIconDrawable="@drawable/baseline_password_24"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/signUpButton"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/yellow_app"
+            android:textColor="@color/white"
+            />
+
+        <View
+            android:layout_marginTop="@dimen/margin"
+            android:layout_width="150dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            android:textColor="@color/black"
+            style="?attr/materialButtonOutlinedStyle"
+            android:id="@+id/backLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/do_you_already_have_an_account"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
