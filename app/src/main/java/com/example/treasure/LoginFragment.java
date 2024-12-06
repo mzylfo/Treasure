@@ -59,8 +59,8 @@ public class LoginFragment extends Fragment {
         Button signUpButton = view.findViewById(R.id.outlinedButton);
 
         loginButton.setOnClickListener(v -> {
-            if (true){
-                if(true){
+            if (isEmailOk(editTextEmail.getText().toString())){
+                if(isPasswordOk(editTextPassword.getText().toString())){
                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity3);
                     // INTENT ESPLICITA
                     /*Intent intent = new Intent(this, MainActivity.class);
@@ -80,17 +80,14 @@ public class LoginFragment extends Fragment {
                     }
                     */
                 }
-                else{
-                    Snackbar.make(view.findViewById(android.R.id.content), "Check your password", Snackbar.LENGTH_SHORT)
-                            .show();
-                }
+               else {
+                Snackbar.make(view, "Check your password", Snackbar.LENGTH_SHORT).show();
             }
-            else{
-                editTextEmail.setError("Check your email");
-                Snackbar.make(view.findViewById(android.R.id.content), "Insert correct email", Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        });
+        } else {
+            editTextEmail.setError("Check your email");
+            Snackbar.make(view, "Insert correct email", Snackbar.LENGTH_SHORT).show();
+        }
+    });
 
         signUpButton.setOnClickListener(v2 -> {
             Navigation.findNavController(v2).navigate(R.id.action_loginFragment_to_signupFragment);

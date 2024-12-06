@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Treasure</string>
+    <string name="label">Insert email</string>
+    <string name="log_in">Log in</string>
+    <string name="login_description">Log in to continue</string>
+    <string name="insert_email">Insert e-mail here</string>
+    <string name="insert_password">Insert password here</string>
+    <string name="forget_button">Forgot passsword?</string>
+    <string name="log_in_with_google">Log in with Google</string>
+    <string name="logo_of_the_application">logo of the application</string>
+    <string name="sign_up">Sign up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="do_you_already_have_an_account">Do you already have an account?</string>
+    <string name="insert_your_name_here">Insert your name here</string>
+</resources>
