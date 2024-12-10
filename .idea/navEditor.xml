@@ -19,7 +19,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_loginFragment_to_mainActivity3">
+                            <entry key="action_loginFragment_to_signupFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -29,26 +29,23 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="mainActivity3">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="257" />
-                            <option name="y" value="117" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="signupFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="244" />
-                            <option name="y" value="-166" />
+                            <option name="x" value="225" />
+                            <option name="y" value="37" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_signupFragment_to_loginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

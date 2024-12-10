@@ -1,16 +1,17 @@
-package com.example.treasure;
+package com.example.treasure.ui.welcome.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import com.example.treasure.R;
 
 
 public class SignupFragment extends Fragment {
@@ -33,7 +34,7 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup2, container, false);
+        return inflater.inflate(R.layout.fragment_signup, container, false);
     }
 
     @Override

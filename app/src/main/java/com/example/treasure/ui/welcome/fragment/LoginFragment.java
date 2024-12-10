@@ -1,18 +1,17 @@
-package com.example.treasure;
+package com.example.treasure.ui.welcome.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-
+import com.example.treasure.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -61,7 +60,8 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             if (isEmailOk(editTextEmail.getText().toString())){
                 if(isPasswordOk(editTextPassword.getText().toString())){
-                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity3);
+                    Snackbar.make(view, "Login successful", Snackbar.LENGTH_SHORT).show();
+                    //Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity3);
                     // INTENT ESPLICITA
                     /*Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);*/

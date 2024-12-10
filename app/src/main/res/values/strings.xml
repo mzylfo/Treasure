@@ -5,7 +5,7 @@
     <string name="login_description">Log in to continue</string>
     <string name="insert_email">Insert e-mail here</string>
     <string name="insert_password">Insert password here</string>
-    <string name="forget_button">Forgot passsword?</string>
+    <string name="forget_button">Forgot password?</string>
     <string name="log_in_with_google">Log in with Google</string>
     <string name="logo_of_the_application">logo of the application</string>
     <string name="sign_up">Sign up</string>

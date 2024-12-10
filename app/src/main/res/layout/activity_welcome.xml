@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".ui.welcome.WelcomeActivity"
     android:background="@color/yellow_app">
 
     <androidx.fragment.app.FragmentContainerView
