@@ -7,4 +7,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeActivity">
 
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/home_nav_graph"
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/botton_navigation"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:layout_editor_absoluteX="0dp"
+        />
+
+    
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/botton_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/home_menu"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

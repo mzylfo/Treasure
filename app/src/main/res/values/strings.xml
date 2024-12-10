@@ -15,4 +15,8 @@
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="do_you_already_have_an_account">Do you already have an account?</string>
     <string name="insert_your_name_here">Insert your name here</string>
+    <string name="profile">Profile</string>
+    <string name="stats">Stats</string>
+    <string name="calendar">Calendar</string>
+    <string name="home">Home</string>
 </resources>

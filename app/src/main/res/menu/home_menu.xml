@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dailyHomeFragment"
+        android:title="@string/home"
+        android:icon="@drawable/baseline_home_filled_24"
+        />
+
+    <item
+    android:id="@+id/calendarMonthFragment"
+    android:title="@string/calendar"
+    android:icon="@drawable/baseline_calendar_month_24"
+    />
+
+    <item
+        android:id="@+id/statsMonthFragment"
+        android:title="@string/stats"
+        android:icon="@drawable/baseline_query_stats_24"
+        />
+
+    <item
+        android:id="@+id/profileSettingsFragment"
+        android:title="@string/profile"
+        android:icon="@drawable/baseline_assignment_ind_24"
+        />
+
+</menu>

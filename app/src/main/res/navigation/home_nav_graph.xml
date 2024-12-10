@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/dailyHomeFragment">
+    <fragment
+        android:id="@+id/calendarMonthFragment"
+        android:name="com.example.treasure.ui.home.fragment.CalendarMonthFragment"
+        android:label="fragment_calendar_month"
+        tools:layout="@layout/fragment_calendar_month" />
+    <fragment
+        android:id="@+id/statsMonthFragment"
+        android:name="com.example.treasure.ui.home.fragment.StatsMonthFragment"
+        android:label="fragment_stats_month"
+        tools:layout="@layout/fragment_stats_month" />
+    <fragment
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.example.treasure.ui.home.fragment.ProfileSettingsFragment"
+        android:label="fragment_profile_settings"
+        tools:layout="@layout/fragment_profile_settings" />
+    <fragment
+        android:id="@+id/dailyHomeFragment"
+        android:name="com.example.treasure.ui.home.fragment.HomeDailyFragment"
+        android:label="fragment_home_daily"
+        tools:layout="@layout/fragment_home_daily" />
+</navigation>
