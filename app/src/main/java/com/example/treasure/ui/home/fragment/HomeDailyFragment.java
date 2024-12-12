@@ -1,14 +1,23 @@
 package com.example.treasure.ui.home.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.treasure.R;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +66,20 @@ public class HomeDailyFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_daily, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home_daily, container, false);
+        //potrebbe essere un problema perchè vado a sincronizzarmi col telefono e non con una api esterna
+        // Ottieni e formatta la data di oggi
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ITALIAN);
+        String formattedDate = today.format(formatter);
+
+        // Imposta il testo nella TextView
+        TextView dateTextView = view.findViewById(R.id.dateTextView);
+        dateTextView.setText(formattedDate);
+
+        return view;
     }
 }
