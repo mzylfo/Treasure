@@ -1,13 +1,106 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/yellow_app">
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date will be here"
-        android:textSize="18sp" />
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin" />
+
+    <RelativeLayout
+        android:id="@+id/nextup"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/md_theme_primaryContainer"
+        android:layout_marginTop="@dimen/margin"
+        android:padding="@dimen/margin"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin">
+
+        <TextView
+            android:id="@+id/nextup_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_up"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="__Impegni__"
+            android:textSize="18sp"
+            android:layout_below="@id/nextup_text" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_primaryContainer"
+        android:layout_marginTop="@dimen/margin"
+        android:padding="@dimen/margin"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:radius="100dp">
+
+
+        <TextView
+            android:id="@+id/how_are_you_feeling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_are_you_feeling"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/how_are_you_feeling"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/happy"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/happy_face" />
+
+            <ImageView
+                android:id="@+id/neutral"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/neutral_face" />
+
+            <ImageView
+                android:id="@+id/sad"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/sad_face" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </LinearLayout>

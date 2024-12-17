@@ -1,5 +1,6 @@
 package com.example.treasure.ui.home.fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,9 +12,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.treasure.R;
+import com.example.treasure.ui.home.HomeActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -79,6 +84,36 @@ public class HomeDailyFragment extends Fragment {
         // Imposta il testo nella TextView
         TextView dateTextView = view.findViewById(R.id.dateTextView);
         dateTextView.setText(formattedDate);
+
+        // Trova gli ImageView dal layout
+        ImageView happyImageView = view.findViewById(R.id.happy);
+        ImageView neutralImageView = view.findViewById(R.id.neutral);
+        ImageView sadImageView = view.findViewById(R.id.sad);
+
+        // Aggiungi i listener per il click
+        happyImageView.setOnClickListener(v -> {
+            // IMPLEMENTARE APERTURA SCRITTURA
+            Snackbar.make(view, "Hai cliccato su Happy", Snackbar.LENGTH_SHORT).show();
+        });
+
+        neutralImageView.setOnClickListener(v -> {
+            // IMPLEMENTARE APERTURA SCRITTURA
+            Snackbar.make(view, "Hai cliccato su Neutral", Snackbar.LENGTH_SHORT).show();
+        });
+
+        sadImageView.setOnClickListener(v -> {
+            // IMPLEMENTARE APERTURA SCRITTURA
+            Snackbar.make(view, "Hai cliccato su Sad", Snackbar.LENGTH_SHORT).show();
+        });
+
+        // Trova il RelativeLayout "nextup"
+        RelativeLayout nextUpLayout = view.findViewById(R.id.nextup);
+
+        // Aggiungi il listener per il click al RelativeLayout
+        nextUpLayout.setOnClickListener(v -> {
+            //IMPLEMENTARE APERTURA NUOVA ACTIVITY
+            Snackbar.make(view, "Hai cliccato su Next Up", Snackbar.LENGTH_SHORT).show();
+        });
 
         return view;
     }

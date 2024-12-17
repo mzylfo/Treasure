@@ -1,5 +1,6 @@
 package com.example.treasure.ui.home.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.treasure.R;
+import com.example.treasure.ui.welcome.WelcomeActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +65,22 @@ public class ProfileSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
+
+        Button changePasswordButton = view.findViewById(R.id.change_password);
+
+        changePasswordButton.setOnClickListener(v -> {
+            // IMPLEMENTARE APERTURA CAMBIO PASSWORD
+            Snackbar.make(view, "Hai cliccato su Change Password", Snackbar.LENGTH_SHORT).show();
+        });
+
+        Button logOutButton = view.findViewById(R.id.log_out);
+
+        logOutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+            startActivity(intent);
+        });
+
+        return view;
     }
 }

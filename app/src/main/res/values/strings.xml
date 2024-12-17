@@ -19,4 +19,13 @@
     <string name="stats">Stats</string>
     <string name="calendar">Calendar</string>
     <string name="home">Home</string>
+    <string name="hi">Hi __user__!</string>
+    <string name="title_name">Name</string>
+    <string name="name">__Name__</string>
+    <string name="title_email">Email</string>
+    <string name="email">__aaa@gmail.com__</string>
+    <string name="change_password">Change Password</string>
+    <string name="how_are_you_feeling">How are you feeling?</string>
+    <string name="next_up">Next up</string>
+    <string name="log_out">Log out</string>
 </resources>
