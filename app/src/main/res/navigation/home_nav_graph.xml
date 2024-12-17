@@ -7,21 +7,22 @@
     <fragment
         android:id="@+id/calendarMonthFragment"
         android:name="com.example.treasure.ui.home.fragment.CalendarMonthFragment"
-        android:label="fragment_calendar_month"
-        tools:layout="@layout/fragment_calendar_month" />
+        android:label="Calendar"
+        tools:layout="@layout/fragment_calendar_month"
+        />
     <fragment
         android:id="@+id/statsMonthFragment"
         android:name="com.example.treasure.ui.home.fragment.StatsMonthFragment"
-        android:label="fragment_stats_month"
+        android:label="Statistics"
         tools:layout="@layout/fragment_stats_month" />
     <fragment
         android:id="@+id/profileSettingsFragment"
         android:name="com.example.treasure.ui.home.fragment.ProfileSettingsFragment"
-        android:label="fragment_profile_settings"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile_settings" />
     <fragment
         android:id="@+id/dailyHomeFragment"
         android:name="com.example.treasure.ui.home.fragment.HomeDailyFragment"
-        android:label="fragment_home_daily"
+        android:label="Home"
         tools:layout="@layout/fragment_home_daily" />
 </navigation>
