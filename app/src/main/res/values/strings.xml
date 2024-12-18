@@ -28,4 +28,12 @@
     <string name="how_are_you_feeling">How are you feeling?</string>
     <string name="next_up">Next up</string>
     <string name="log_out">Log out</string>
+    <string name="monthly_stats">Monthly Stats</string>
+    <string name="happiness_you_were_happy_for_33_of_the_month">Happiness\nYou were happy for 33% of the month</string>
+    <string name="sadness_nyou_were_sad_for_33_of_the_month">Sadness\nYou were sad for 33% of the month</string>
+    <string name="neutrality_nyou_were_neutral_for_34_of_the_month">Neutrality\nYou were neutral for 34% of the month</string>
+    <string name="current_date">Current Date</string>
+    <string name="overall_nin_this_month_you_have_mostly_been_happy_n_67">Overall\nin this month you have mostly been happy.\n 67%</string>
+    <string name="impegni">__Impegni__</string>
+    <string name="click_to_start_typing">Click to start typing ...</string>
 </resources>

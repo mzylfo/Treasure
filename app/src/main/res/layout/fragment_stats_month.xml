@@ -5,10 +5,47 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.fragment.StatsMonthFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center|top"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/rounded_corners_below"
+        android:padding="40dp"
+        android:text="@string/monthly_stats"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:background="@drawable/rounded_corners_fragment"
+        android:text="@string/happiness_you_were_happy_for_33_of_the_month"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:padding="30dp"
+        android:elegantTextHeight="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="340dp"
+        android:background="@drawable/rounded_corners_fragment"
+        android:text="@string/sadness_nyou_were_sad_for_33_of_the_month"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:padding="30dp"
+        android:elegantTextHeight="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"
+        android:background="@drawable/rounded_corners_fragment"
+        android:text="@string/neutrality_nyou_were_neutral_for_34_of_the_month"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:padding="30dp"
+        android:elegantTextHeight="true"/>
+
 
 </FrameLayout>
