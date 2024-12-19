@@ -29,7 +29,6 @@
             android:text="__String resuming stats__"
             android:layout_gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
             android:padding="20dp"
             android:elegantTextHeight="true"/>
     </LinearLayout>
