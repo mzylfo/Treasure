@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/margin"
-    android:background="@drawable/rounded_corners_below">
+    android:background="@drawable/rounded_corners_below"
+    >
 
     <TextView
         android:id="@+id/dateTextView"

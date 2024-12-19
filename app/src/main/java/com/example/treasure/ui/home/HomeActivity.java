@@ -55,6 +55,13 @@ public class HomeActivity extends AppCompatActivity {
             if (destination.getLabel() != null) {
                 toolbarTitle.setText(destination.getLabel());
             }
+
+            // Cambia lo sfondo della toolbar in base al fragment corrente
+            if (destination.getId() == R.id.profileSettingsFragment || destination.getId() == R.id.dailyHomeFragment) {
+                toolbar.setBackgroundResource(R.color.yellow_app); // Colore senza bordi arrotondati
+            } else {
+                toolbar.setBackgroundResource(R.drawable.rounded_toolbar_corners); // Drawable con bordi arrotondati
+            }
         });
     }
 

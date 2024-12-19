@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/yellow_app"
+        android:background="@drawable/rounded_corners_below"
         app:layout_constraintTop_toTopOf="parent"
         >
             <TextView

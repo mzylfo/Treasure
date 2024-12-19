@@ -1,51 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.fragment.StatsMonthFragment">
+    tools:context=".ui.home.fragment.StatsMonthFragment"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/happinessContainer"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:gravity="center|top"
-        android:layout_marginTop="0dp"
-        android:background="@drawable/rounded_corners_below"
-        android:padding="40dp"
-        android:text="@string/monthly_stats"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
         android:background="@drawable/rounded_corners_fragment"
-        android:text="@string/happiness_you_were_happy_for_33_of_the_month"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:padding="30dp"
-        android:elegantTextHeight="true"/>
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin">
 
-    <TextView
-        android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/happiness"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners_fragment"
+            android:text="@string/happiness_you_were_happy_for_33_of_the_month"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="10dp"
+            android:padding="20dp"
+            android:elegantTextHeight="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sadnessContainer"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
         android:background="@drawable/rounded_corners_fragment"
-        android:text="@string/sadness_nyou_were_sad_for_33_of_the_month"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:padding="30dp"
-        android:elegantTextHeight="true"/>
+        android:layout_marginTop="@dimen/margin"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin">
 
-    <TextView
-        android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sadness"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners_fragment"
+            android:text="@string/sadness_nyou_were_sad_for_33_of_the_month"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="20dp"
+            android:elegantTextHeight="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/neutralContainer"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
         android:background="@drawable/rounded_corners_fragment"
-        android:text="@string/neutrality_nyou_were_neutral_for_34_of_the_month"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:padding="30dp"
-        android:elegantTextHeight="true"/>
+        android:layout_marginTop="@dimen/margin"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/neutral"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners_fragment"
+            android:text="@string/neutrality_nyou_were_neutral_for_34_of_the_month"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="20dp"
+            android:elegantTextHeight="true"/>
+    </LinearLayout>
 
 
-</FrameLayout>
+</LinearLayout>
