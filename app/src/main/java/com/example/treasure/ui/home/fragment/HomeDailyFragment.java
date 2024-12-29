@@ -1,7 +1,5 @@
 package com.example.treasure.ui.home.fragment;
 
-import static org.apache.commons.validator.GenericTypeValidator.formatDate;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,17 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.treasure.R;
-import com.example.treasure.model.TimeZoneResponse;
-import com.example.treasure.util.Constants;
-import com.example.treasure.util.DateParser;
-import com.example.treasure.util.JSONParserUtils;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -38,8 +29,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class HomeDailyFragment extends Fragment {
-    public static final String TAG = HomeDailyFragment.class.getName();
-    private View nextUpView;
+
+    private String formatDate(String date) {
+        // Definisci il formato della data in ingresso
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Modifica se necessario in base al formato che ricevi dall'API
+        // Definisci il formato della data in uscita
+        SimpleDateFormat outputFormat = new SimpleDateFormat("d MMMM yyyy");
+
+        try {
+            Date parsedDate = inputFormat.parse(date); // Parsea la data in ingresso
+            return outputFormat.format(parsedDate); // Ritorna la data nel formato desiderato
+        } catch (Exception e) {
+            return date; // Se c'è un errore, ritorna la data originale
+        }
+    }
 
     private TextView dateTextView;
 
@@ -48,35 +51,10 @@ public class HomeDailyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_daily, container, false);
         dateTextView = view.findViewById(R.id.dateTextView);
-        nextUpView = view.findViewById(R.id.nextup);
-        JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
-
-        try {
-            TimeZoneResponse response = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-            String formattedDate = response.getFormatted();
-            String formattedDateWithNewFormat = DateParser.formatDate(formattedDate);
-            dateTextView.setText(formattedDateWithNewFormat);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        nextUpView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDailyPageFragment();
-            }
-        });
-
-        //getCurrentTime();
+        getCurrentTime();
         return view;
     }
 
-    private void showDailyPageFragment() {
-        DialogFragment dailyPageFragment = new DailyPageFragment();
-        dailyPageFragment.show(getFragmentManager(), "DailyPageFragment");
-    }
-/*
     private void getCurrentTime() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -90,7 +68,7 @@ public class HomeDailyFragment extends Fragment {
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<TimeZoneResponse> call = apiService.getTimeZone("EFI0PITZ4VQC", "json", "zone", Constants.TIME_ZONE);
+        Call<TimeZoneResponse> call = apiService.getTimeZone("EFI0PITZ4VQC", "json", "zone", "Europe/Rome");
         call.enqueue(new Callback<TimeZoneResponse>() {
             @Override
             public void onResponse(@NonNull Call<TimeZoneResponse> call, @NonNull Response<TimeZoneResponse> response) {
@@ -100,8 +78,7 @@ public class HomeDailyFragment extends Fragment {
                     dateTextView.setText(formattedDateWithNewFormat);
                 } else {
                     dateTextView.setText("Errore nella risposta");
-
-
+                    Log.e("HomeDailyFragment", "Response error: " + response.message());
                 }
             }
 
@@ -122,6 +99,68 @@ public class HomeDailyFragment extends Fragment {
                 @Query("zone") String zone
         );
     }
-*/
 
+    public static class TimeZoneResponse {
+        private String status;
+        private String message;
+        private String countryCode;
+        private String countryName;
+        private String regionName;
+        private String cityName;
+        private String zoneName;
+        private String abbreviation;
+        private int gmtOffset;
+        private String dst;
+        private long zoneStart;
+        private long zoneEnd;
+        private String nextAbbreviation;
+        private long timestamp;
+        private String formatted;
+
+        // Getters e Setters
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
+
+        public String getCountryCode() { return countryCode; }
+        public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
+
+        public String getCountryName() { return countryName; }
+        public void setCountryName(String countryName) { this.countryName = countryName; }
+
+        public String getRegionName() { return regionName; }
+        public void setRegionName(String regionName) { this.regionName = regionName; }
+
+        public String getCityName() { return cityName; }
+        public void setCityName(String cityName) { this.cityName = cityName; }
+
+        public String getZoneName() { return zoneName; }
+        public void setZoneName(String zoneName) { this.zoneName = zoneName; }
+
+        public String getAbbreviation() { return abbreviation; }
+        public void setAbbreviation(String abbreviation) { this.abbreviation = abbreviation; }
+
+        public int getGmtOffset() { return gmtOffset; }
+        public void setGmtOffset(int gmtOffset) { this.gmtOffset = gmtOffset; }
+
+        public String getDst() { return dst; }
+        public void setDst(String dst) { this.dst = dst; }
+
+        public long getZoneStart() { return zoneStart; }
+        public void setZoneStart(long zoneStart) { this.zoneStart = zoneStart; }
+
+        public long getZoneEnd() { return zoneEnd; }
+        public void setZoneEnd(long zoneEnd) { this.zoneEnd = zoneEnd; }
+
+        public String getNextAbbreviation() { return nextAbbreviation; }
+        public void setNextAbbreviation(String nextAbbreviation) { this.nextAbbreviation = nextAbbreviation; }
+
+        public long getTimestamp() { return timestamp; }
+        public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
+        public String getFormatted() { return formatted; }
+        public void setFormatted(String formatted) { this.formatted = formatted; }
+    }
 }
