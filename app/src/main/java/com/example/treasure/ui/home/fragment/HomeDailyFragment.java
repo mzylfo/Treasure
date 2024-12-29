@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.treasure.R;
 
@@ -29,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class HomeDailyFragment extends Fragment {
+    private View nextUpView;
 
     private String formatDate(String date) {
         // Definisci il formato della data in ingresso
@@ -51,10 +54,23 @@ public class HomeDailyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_daily, container, false);
         dateTextView = view.findViewById(R.id.dateTextView);
+        nextUpView = view.findViewById(R.id.nextup);
+
+        nextUpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDailyPageFragment();
+            }
+        });
+
         getCurrentTime();
         return view;
     }
 
+    private void showDailyPageFragment() {
+        DialogFragment dailyPageFragment = new DailyPageFragment();
+        dailyPageFragment.show(getFragmentManager(), "DailyPageFragment");
+    }
     private void getCurrentTime() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)

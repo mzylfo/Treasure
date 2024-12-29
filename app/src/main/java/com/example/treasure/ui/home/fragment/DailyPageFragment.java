@@ -64,7 +64,7 @@ public class DailyPageFragment extends DialogFragment {
         });
 
 
-        return view;
+        return inflater.inflate(R.layout.fragment_daily_page, container, false);
     }
 
     @Override
