@@ -39,4 +39,6 @@
     <string name="happiness">Happiness</string>
     <string name="neutral">Neutral</string>
     <string name="sadness">Sadness</string>
+    <string name="events">Events</string>
+    <string name="feelings">Feelings</string>
 </resources>

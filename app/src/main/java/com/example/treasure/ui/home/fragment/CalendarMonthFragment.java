@@ -7,14 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.example.treasure.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarMonthFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class CalendarMonthFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -30,15 +29,6 @@ public class CalendarMonthFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CalendarMonthFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CalendarMonthFragment newInstance(String param1, String param2) {
         CalendarMonthFragment fragment = new CalendarMonthFragment();
         Bundle args = new Bundle();
@@ -60,7 +50,21 @@ public class CalendarMonthFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar_month, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar_month, container, false);
+
+        CalendarView calendarView = view.findViewById(R.id.calendarView);
+
+        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+            Calendar selectedCalendar = Calendar.getInstance();
+            selectedCalendar.set(year, month, dayOfMonth);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy", java.util.Locale.getDefault());
+
+            String formattedDate = dateFormat.format(selectedCalendar.getTime());
+            DailyPageFragment dialogFragment = DailyPageFragment.newInstance(formattedDate);
+            dialogFragment.show(getParentFragmentManager(), "DailyPageFragment"); // Ora il dialogo
+        });
+
+        return view;
     }
 }

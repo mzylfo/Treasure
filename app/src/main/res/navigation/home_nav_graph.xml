@@ -8,8 +8,7 @@
         android:id="@+id/calendarMonthFragment"
         android:name="com.example.treasure.ui.home.fragment.CalendarMonthFragment"
         android:label="Calendar"
-        tools:layout="@layout/fragment_calendar_month"
-        />
+        tools:layout="@layout/fragment_calendar_month" />
     <fragment
         android:id="@+id/statsMonthFragment"
         android:name="com.example.treasure.ui.home.fragment.StatsMonthFragment"

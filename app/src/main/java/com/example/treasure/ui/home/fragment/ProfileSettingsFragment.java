@@ -67,12 +67,14 @@ public class ProfileSettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
+        /*
         Button changePasswordButton = view.findViewById(R.id.change_password);
 
         changePasswordButton.setOnClickListener(v -> {
             // IMPLEMENTARE APERTURA CAMBIO PASSWORD
             Snackbar.make(view, "Hai cliccato su Change Password", Snackbar.LENGTH_SHORT).show();
         });
+        */
 
         Button logOutButton = view.findViewById(R.id.log_out);
 

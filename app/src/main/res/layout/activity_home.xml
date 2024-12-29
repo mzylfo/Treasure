@@ -36,7 +36,7 @@
         tools:layout_editor_absoluteX="0dp"
         />
 
-    
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/botton_navigation"
         android:layout_width="match_parent"

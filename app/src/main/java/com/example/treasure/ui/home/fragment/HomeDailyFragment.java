@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.treasure.R;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -24,7 +25,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class HomeDailyFragment extends Fragment {
+
+    private String formatDate(String date) {
+        // Definisci il formato della data in ingresso
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Modifica se necessario in base al formato che ricevi dall'API
+        // Definisci il formato della data in uscita
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MM yyyy");
+
+        try {
+            Date parsedDate = inputFormat.parse(date); // Parsea la data in ingresso
+            return outputFormat.format(parsedDate); // Ritorna la data nel formato desiderato
+        } catch (Exception e) {
+            return date; // Se c'è un errore, ritorna la data originale
+        }
+    }
 
     private TextView dateTextView;
 
@@ -56,7 +74,8 @@ public class HomeDailyFragment extends Fragment {
             public void onResponse(@NonNull Call<TimeZoneResponse> call, @NonNull Response<TimeZoneResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String formattedDate = response.body().getFormatted();
-                    dateTextView.setText(formattedDate);
+                    String formattedDateWithNewFormat = formatDate(formattedDate);
+                    dateTextView.setText(formattedDateWithNewFormat);
                 } else {
                     dateTextView.setText("Errore nella risposta");
                     Log.e("HomeDailyFragment", "Response error: " + response.message());
