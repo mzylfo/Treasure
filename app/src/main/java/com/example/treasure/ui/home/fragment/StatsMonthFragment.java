@@ -25,7 +25,7 @@ public class StatsMonthFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stats_month, container, false);
 
-        int counter0 = getArguments().getInt("counter0", 0);
+        /*int counter0 = getArguments().getInt("counter0", 0);
         int counter1 = getArguments().getInt("counter1", 0);
         int counter2 = getArguments().getInt("counter2", 0);
         int totalClicks = counter0 + counter1 + counter2;
@@ -40,7 +40,7 @@ public class StatsMonthFragment extends Fragment {
 
         textView0.setText(getString(R.string.monthly_happiness_str, percentage0));
         textView1.setText(getString(R.string.monthly_neutrality_str, percentage1));
-        textView2.setText(getString(R.string.monthly_sadness_str, percentage2));
+        textView2.setText(getString(R.string.monthly_sadness_str, percentage2));*/
 
         return view;
     }
