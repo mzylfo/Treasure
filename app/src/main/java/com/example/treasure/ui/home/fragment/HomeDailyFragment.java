@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class HomeDailyFragment extends Fragment {
     public static final String TAG = HomeDailyFragment.class.getName();
     private View nextUpView;
     private TextView dateTextView;
+    private ImageView happyImageView, neutralImageView, sadImageView;
 
     @Nullable
     @Override
@@ -44,6 +46,10 @@ public class HomeDailyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_daily, container, false);
 
         JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
+
+        happyImageView = view.findViewById(R.id.happy);
+        neutralImageView = view.findViewById(R.id.neutral);
+        sadImageView = view.findViewById(R.id.sad);
 
         // Trova la view "nextup"
         nextUpView = view.findViewById(R.id.nextup);
@@ -69,6 +75,21 @@ public class HomeDailyFragment extends Fragment {
             // Mostra il DailyPageFragment con la data ottenuta
             DailyPageFragment dialogFragment = DailyPageFragment.newInstance(date);
             dialogFragment.show(getParentFragmentManager(), "DailyPageFragment");
+        });
+
+        view.findViewById(R.id.happy).setOnClickListener(v -> {
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
+        });
+
+        view.findViewById(R.id.neutral).setOnClickListener(v -> {
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
+        });
+
+        view.findViewById(R.id.sad).setOnClickListener(v -> {
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         return view;
