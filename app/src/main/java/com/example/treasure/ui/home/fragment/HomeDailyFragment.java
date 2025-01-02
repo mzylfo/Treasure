@@ -11,15 +11,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.treasure.R;
+import com.example.treasure.adapter.EventRecyclerAdapter;
+import com.example.treasure.database.EventDAO;
+import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.model.Event;
+import com.example.treasure.model.EventApiResponse;
 import com.example.treasure.util.Constants;
 import com.example.treasure.util.DateParser;
 import com.example.treasure.model.TimeZoneResponse;
 import com.example.treasure.util.JSONParserUtils;
+import com.example.treasure.util.TimeParser;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -47,6 +56,9 @@ public class HomeDailyFragment extends Fragment {
 
         JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
 
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventNextUp);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
         happyImageView = view.findViewById(R.id.happy);
         neutralImageView = view.findViewById(R.id.neutral);
         sadImageView = view.findViewById(R.id.sad);
@@ -59,14 +71,20 @@ public class HomeDailyFragment extends Fragment {
 
         //settiamo il text della data in modo formato
         try {
-            TimeZoneResponse response = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-            String formattedDate = response.getFormatted();
-            String formattedDateWithNewFormat = DateParser.formatDate(formattedDate);
+            TimeZoneResponse responseDate = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
+            String formattedDateWithNewFormat = DateParser.formatDate(responseDate.getFormatted());
             dateTextView.setText(formattedDateWithNewFormat);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        List<Event> eventList = EventRoomDatabase.getDatabase(view.getContext()).eventDAO().getAll();
+
+        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
+
+        recyclerView.setAdapter(adapter);
+
         // Aggiungi un listener di click alla view "nextup"
         nextUpView.setOnClickListener(v -> {
             // Ottieni la data dal TextView

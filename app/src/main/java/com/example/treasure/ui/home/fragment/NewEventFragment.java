@@ -3,6 +3,7 @@ package com.example.treasure.ui.home.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.treasure.R;
+import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.model.Event;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -83,9 +87,10 @@ public class NewEventFragment extends BottomSheetDialogFragment {
 
         // Salvataggio evento
         saveEventButton.setOnClickListener(v -> {
-            String eventName = eventNameEditText.getText().toString();
+            Event eventNew = new Event(eventNameEditText.getText().toString(), selectDateButton.getText().toString(), selectedTimeTextView.getText().toString());
+            Log.e("meow", selectTimeButton.getText().toString());
 
-            // DA IMPLEMENTARE IL SALVATAGGIO DELL'EVENTO
+            EventRoomDatabase.getDatabase(v.getContext()).eventDAO().insert(eventNew);
 
             dismiss();  // Chiude il BottomSheetDialog
         });

@@ -41,4 +41,6 @@
     <string name="sadness">Sadness</string>
     <string name="events">Events</string>
     <string name="feelings">Feelings</string>
+    <string name="event_title">Event_Title</string>
+    <string name="start_date">Start_Date</string>
 </resources>
