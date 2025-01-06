@@ -17,11 +17,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.treasure.R;
+import com.example.treasure.adapter.EventRecyclerAdapter;
+import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.model.Event;
 import com.example.treasure.ui.home.HomeActivity;
+import com.example.treasure.util.JSONParserUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.List;
 import java.util.Objects;
 
 public class DailyPageFragment extends DialogFragment {
@@ -52,6 +59,17 @@ public class DailyPageFragment extends DialogFragment {
         String date = getArguments() != null ? getArguments().getString(ARG_DATE) : "No Date";
         TextView dateTextView = view.findViewById(R.id.selectedDateTextView);
         dateTextView.setText(date);
+
+        JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
+
+        RecyclerView eventsRecyclerView = view.findViewById(R.id.recyclerNextEvents);
+        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        List<Event> eventList = EventRoomDatabase.getDatabase(view.getContext()).eventDAO().getAll();
+
+        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
+
+        eventsRecyclerView.setAdapter(adapter);
 
         view.findViewById(R.id.back_button).setOnClickListener(v -> {
             // Quando il pulsante "indietro" viene premuto, semplicemente chiudi il dialogo
