@@ -22,8 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.treasure.R;
 import com.example.treasure.adapter.EventRecyclerAdapter;
+import com.example.treasure.adapter.FeelingRecyclerAdapter;
 import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.database.FeelingRoomDatabase;
 import com.example.treasure.model.Event;
+import com.example.treasure.model.Feeling;
 import com.example.treasure.ui.home.HomeActivity;
 import com.example.treasure.util.JSONParserUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -62,14 +65,19 @@ public class DailyPageFragment extends DialogFragment {
 
         JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
 
+        //recycler x events
         RecyclerView eventsRecyclerView = view.findViewById(R.id.recyclerNextEvents);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
         List<Event> eventList = EventRoomDatabase.getDatabase(view.getContext()).eventDAO().getAll();
-
         EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
-
         eventsRecyclerView.setAdapter(adapter);
+
+        //recycler x feeling
+        RecyclerView feelingsRecyclerView = view.findViewById(R.id.recyclerFeelings);
+        feelingsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        List<Feeling> feelingList = FeelingRoomDatabase.getDatabase(view.getContext()).feelingDAO().getAll();
+        FeelingRecyclerAdapter adapterFeeling = new FeelingRecyclerAdapter(R.layout.card_feeling, feelingList);
+        feelingsRecyclerView.setAdapter(adapterFeeling);
 
         view.findViewById(R.id.back_button).setOnClickListener(v -> {
             // Quando il pulsante "indietro" viene premuto, semplicemente chiudi il dialogo

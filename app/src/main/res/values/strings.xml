@@ -43,4 +43,5 @@
     <string name="feelings">Feelings</string>
     <string name="event_title">Event_Title</string>
     <string name="start_date">Start_Date</string>
+    <string name="entry_face">Entry_face</string>
 </resources>

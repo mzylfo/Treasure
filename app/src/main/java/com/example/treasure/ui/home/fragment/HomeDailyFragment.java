@@ -96,17 +96,17 @@ public class HomeDailyFragment extends Fragment {
         });
 
         view.findViewById(R.id.happy).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(1);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.neutral).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(0);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.sad).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance();
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
