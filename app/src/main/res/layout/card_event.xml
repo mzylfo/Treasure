@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/start_date"
             android:textStyle="bold"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/separator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -41,7 +41,7 @@
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:text="@string/event_title"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toEndOf="@+id/separator"
             app:layout_constraintEnd_toEndOf="parent"

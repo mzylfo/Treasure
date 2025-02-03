@@ -1,5 +1,6 @@
 package com.example.treasure.ui.home.fragment;
 
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,14 +29,17 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
     private Button saveEntryButton, cancelButton;
 
     private static final String ARG_FEELING = "feeling";
+    private static final String ARG_DATE = "date";
 
-    public static NewFeelingFragment newInstance(int feeling) {
+    public static NewFeelingFragment newInstance(int feeling, String date) {
         NewFeelingFragment fragment = new NewFeelingFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_FEELING, feeling);
+        args.putString(ARG_DATE, date);
         fragment.setArguments(args);
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,10 +66,10 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
     private void saveEvent(){
         if (getArguments() != null) {
             int entryFace = getArguments().getInt(ARG_FEELING);
+            String date = getArguments().getString(ARG_DATE);
             // Usa l'intero "feeling" come necessario
 
             String entryText = feelingEntryEditText.getText().toString();
-            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
             String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
             Feeling newFeeling = new Feeling(entryText, entryFace, date, time);

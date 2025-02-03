@@ -23,10 +23,13 @@ import com.example.treasure.model.EventApiResponse;
 import com.example.treasure.util.Constants;
 import com.example.treasure.util.DateParser;
 import com.example.treasure.model.TimeZoneResponse;
+import com.example.treasure.util.DateUtils;
 import com.example.treasure.util.JSONParserUtils;
 import com.example.treasure.util.TimeParser;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -70,25 +73,45 @@ public class HomeDailyFragment extends Fragment {
         dateTextView = view.findViewById(R.id.dateTextView);
 
         //settiamo il text della data in modo formato
-        try {
-            TimeZoneResponse responseDate = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-            String formattedDateWithNewFormat = DateParser.formatDate(responseDate.getFormatted());
-            dateTextView.setText(formattedDateWithNewFormat);
+        String currentDate = DateUtils.getCurrentDate();
+        dateTextView.setText(currentDate);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        // Ottieni la data dal TextView
+        String date = dateTextView.getText().toString();
+
+        // Recupera tutti gli eventi della data corrente
+        List<Event> allDailyEvents = EventRoomDatabase.getDatabase(view.getContext())
+                .eventDAO()
+                .getEventsByDate(date);
+
+    // Filtra solo gli eventi nell'arco di trenta minuti
+        List<Event> upcomingEvents = new ArrayList<>();
+        Calendar now = Calendar.getInstance();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        String currentTimeString = timeFormat.format(now.getTime());
+
+        for (Event event : allDailyEvents) {
+            try {
+                Date eventTime = timeFormat.parse(event.getTime()); // Assumo che getTime() restituisca "HH:mm"
+                Date currentTime = timeFormat.parse(currentTimeString);
+
+                long diffMinutes = (eventTime.getTime() - currentTime.getTime()) / (60 * 1000);
+
+                if (diffMinutes >= -30 && diffMinutes <= 30) {
+                    upcomingEvents.add(event);
+                }
+            } catch (ParseException e) {
+                Log.e(TAG, "Errore nel parsing del tempo", e);
+            }
         }
 
-        List<Event> eventList = EventRoomDatabase.getDatabase(view.getContext()).eventDAO().getAll();
-
-        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
-
+// Usa upcomingEvents invece di allDailyEvents
+        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, upcomingEvents);
         recyclerView.setAdapter(adapter);
 
         // Aggiungi un listener di click alla view "nextup"
         nextUpView.setOnClickListener(v -> {
-            // Ottieni la data dal TextView
-            String date = dateTextView.getText().toString();
+
 
             // Mostra il DailyPageFragment con la data ottenuta
             DailyPageFragment dialogFragment = DailyPageFragment.newInstance(date);
@@ -96,17 +119,17 @@ public class HomeDailyFragment extends Fragment {
         });
 
         view.findViewById(R.id.happy).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(1);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(1, date);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.neutral).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(0);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(0, date);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.sad).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1, date);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 

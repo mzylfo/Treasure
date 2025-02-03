@@ -21,7 +21,9 @@ import com.example.treasure.R;
 import com.example.treasure.adapter.EventRecyclerAdapter;
 import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
+import com.example.treasure.util.DateParser;
 import com.example.treasure.util.JSONParserUtils;
+import com.example.treasure.util.TimeParser;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -36,13 +38,27 @@ import java.util.Locale;
 
 public class NewEventFragment extends BottomSheetDialogFragment {
 
+    private static final String ARG_DATE = "date";
+    private String selectedDate;
     private EditText eventNameEditText;
     private Button selectDateButton, selectTimeButton, saveEventButton, cancelButton;
     private TextView selectedDateTextView, selectedTimeTextView;
     private Calendar eventCalendar = Calendar.getInstance();
 
-    public static NewEventFragment newInstance() {
-        return new NewEventFragment();
+    public static NewEventFragment newInstance(String date) {
+        NewEventFragment fragment = new NewEventFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_DATE, date);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            selectedDate = getArguments().getString(ARG_DATE);
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -57,6 +73,7 @@ public class NewEventFragment extends BottomSheetDialogFragment {
         saveEventButton = view.findViewById(R.id.save_event_button);
         cancelButton = view.findViewById(R.id.cancel_button);
         selectedDateTextView = view.findViewById(R.id.event_date_label);
+        selectedDateTextView.setText(selectedDate);
         selectedTimeTextView = view.findViewById(R.id.event_time_label);
 
         selectDateButton.setOnClickListener(v -> showDatePicker());
@@ -93,10 +110,15 @@ public class NewEventFragment extends BottomSheetDialogFragment {
         String eventDate = selectedDateTextView.getText().toString();
         String eventTime = selectedTimeTextView.getText().toString();
 
-        // Formatta l'ora nel formato desiderato
-        String formattedTime = formatTime(eventTime);
+        // Formattiamo la data nel formato desiderato
+        String formattedDate = DateParser.formatDate(eventDate);
+        Log.e("DATE", formattedDate);
 
-        Event newEvent = new Event(eventName, eventDate, formattedTime);
+        // Formatta l'ora nel formato desiderato
+        String formattedTime = TimeParser.formatTime(eventTime);
+        Log.e("TIME", formattedTime);
+
+        Event newEvent = new Event(eventName, formattedDate, formattedTime);
 
         // Ottieni l'istanza del database
         EventRoomDatabase db = EventRoomDatabase.getDatabase(getContext());

@@ -68,14 +68,14 @@ public class DailyPageFragment extends DialogFragment {
         //recycler x events
         RecyclerView eventsRecyclerView = view.findViewById(R.id.recyclerNextEvents);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        List<Event> eventList = EventRoomDatabase.getDatabase(view.getContext()).eventDAO().getAll();
+        List<Event> eventList = EventRoomDatabase.getDatabase(getContext()).eventDAO().getEventsByDate(date);
         EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
         eventsRecyclerView.setAdapter(adapter);
 
         //recycler x feeling
         RecyclerView feelingsRecyclerView = view.findViewById(R.id.recyclerFeelings);
         feelingsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        List<Feeling> feelingList = FeelingRoomDatabase.getDatabase(view.getContext()).feelingDAO().getAll();
+        List<Feeling> feelingList = FeelingRoomDatabase.getDatabase(view.getContext()).feelingDAO().getFeelingsByDate(date);
         FeelingRecyclerAdapter adapterFeeling = new FeelingRecyclerAdapter(R.layout.card_feeling, feelingList);
         feelingsRecyclerView.setAdapter(adapterFeeling);
 
@@ -85,7 +85,7 @@ public class DailyPageFragment extends DialogFragment {
         });
 
         view.findViewById(R.id.button_plus).setOnClickListener(v -> {
-            NewEventFragment newEventFragment = NewEventFragment.newInstance();
+            NewEventFragment newEventFragment = NewEventFragment.newInstance(date);
             newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });
 

@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
 
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.List;
 public interface FeelingDAO {
     @Query("SELECT * FROM Feeling")
     List<Feeling> getAll();
+
+    @Query("SELECT * FROM Feeling WHERE date = :date")
+    List<Feeling> getFeelingsByDate(String date);
 
     @Insert
     void insertAll(Feeling... feelings);

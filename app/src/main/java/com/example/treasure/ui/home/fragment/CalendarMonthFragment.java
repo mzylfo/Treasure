@@ -27,7 +27,7 @@ public class CalendarMonthFragment extends Fragment {
             Calendar selectedCalendar = Calendar.getInstance();
             selectedCalendar.set(year, month, dayOfMonth);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy", java.util.Locale.getDefault());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault());
 
             String formattedDate = dateFormat.format(selectedCalendar.getTime());
             DailyPageFragment dialogFragment = DailyPageFragment.newInstance(formattedDate);
