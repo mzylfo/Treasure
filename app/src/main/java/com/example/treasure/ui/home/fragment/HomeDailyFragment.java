@@ -26,6 +26,7 @@ import com.example.treasure.model.TimeZoneResponse;
 import com.example.treasure.util.DateUtils;
 import com.example.treasure.util.JSONParserUtils;
 import com.example.treasure.util.TimeParser;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -65,6 +66,10 @@ public class HomeDailyFragment extends Fragment {
         happyImageView = view.findViewById(R.id.happy);
         neutralImageView = view.findViewById(R.id.neutral);
         sadImageView = view.findViewById(R.id.sad);
+
+        //definizione dei due bottoni
+        FloatingActionButton fabLeft = view.findViewById(R.id.fab_left);
+        FloatingActionButton fabRight = view.findViewById(R.id.fab_right);
 
         // Trova la view "nextup"
         nextUpView = view.findViewById(R.id.nextup);
@@ -132,6 +137,20 @@ public class HomeDailyFragment extends Fragment {
             NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1, date);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
+
+        // Listener per fab_left
+        fabLeft.setOnClickListener(v -> {
+            // Mostra il DailyPageFragment con la data ottenuta
+            DailyPageFragment dialogFragment = DailyPageFragment.newInstance(date);
+            dialogFragment.show(getParentFragmentManager(), "DailyPageFragment");
+        });
+
+        // Listener per fab_right
+        fabRight.setOnClickListener(v -> {
+                NewEventFragment newEventFragment = NewEventFragment.newInstance(date);
+                newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
+        });
+
 
         return view;
     }
