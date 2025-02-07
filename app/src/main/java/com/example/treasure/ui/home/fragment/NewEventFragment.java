@@ -1,6 +1,7 @@
 package com.example.treasure.ui.home.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +45,13 @@ public class NewEventFragment extends BottomSheetDialogFragment {
     private Button selectDateButton, selectTimeButton, saveEventButton, cancelButton;
     private TextView selectedDateTextView, selectedTimeTextView;
     private Calendar eventCalendar = Calendar.getInstance();
+    private OnEventAddedListener callback;
+
+    public interface OnEventAddedListener {
+        void onEventAdded();
+    }
+
+
 
     public static NewEventFragment newInstance(String date) {
         NewEventFragment fragment = new NewEventFragment();
@@ -51,6 +59,23 @@ public class NewEventFragment extends BottomSheetDialogFragment {
         args.putString(ARG_DATE, date);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnEventAddedListener) {
+            callback = (OnEventAddedListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnEventAddedListener");
+        }
+    }
+
+    // Chiamare questo metodo dopo aver aggiunto un nuovo evento
+    private void notifyEventAdded() {
+        if (callback != null) {
+            callback.onEventAdded();
+        }
     }
 
     @Override
@@ -123,9 +148,20 @@ public class NewEventFragment extends BottomSheetDialogFragment {
         // Ottieni l'istanza del database
         EventRoomDatabase db = EventRoomDatabase.getDatabase(getContext());
 
+        // Dopo aver aggiunto l'evento
+        if (callback != null) {
+            callback.onEventAdded();
+        }
+
         // Inserisci l'evento nel database
         new Thread(() -> {
             db.eventDAO().insert(newEvent);
+            // Esegui la parte che interagisce con la UI nel thread principale
+            getActivity().runOnUiThread(() -> {
+                if (isAdded()) {
+                    requireActivity().getSupportFragmentManager().setFragmentResult("event_saved", new Bundle());
+                }
+            });
         }).start();
 
         dismiss();

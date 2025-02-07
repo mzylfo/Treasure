@@ -17,7 +17,7 @@ public interface EventDAO {
     @Query("SELECT * FROM Event")
     List<Event> getAll();
 
-    @Query("SELECT * FROM Event WHERE date = :date")
+    @Query("SELECT * FROM Event WHERE date = :date ORDER BY time ASC")
     List<Event> getEventsByDate(String date);
 
     @Query("SELECT * FROM Event WHERE date = :date BETWEEN :currentTime AND :futureTime ORDER BY date ASC")

@@ -84,36 +84,6 @@ public class HomeDailyFragment extends Fragment {
         // Ottieni la data dal TextView
         String date = dateTextView.getText().toString();
 
-        // Recupera tutti gli eventi della data corrente
-        List<Event> allDailyEvents = EventRoomDatabase.getDatabase(view.getContext())
-                .eventDAO()
-                .getEventsByDate(date);
-
-    // Filtra solo gli eventi nell'arco di trenta minuti
-        List<Event> upcomingEvents = new ArrayList<>();
-        Calendar now = Calendar.getInstance();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String currentTimeString = timeFormat.format(now.getTime());
-
-        for (Event event : allDailyEvents) {
-            try {
-                Date eventTime = timeFormat.parse(event.getTime()); // Assumo che getTime() restituisca "HH:mm"
-                Date currentTime = timeFormat.parse(currentTimeString);
-
-                long diffMinutes = (eventTime.getTime() - currentTime.getTime()) / (60 * 1000);
-
-                if (diffMinutes >= -30 && diffMinutes <= 30) {
-                    upcomingEvents.add(event);
-                }
-            } catch (ParseException e) {
-                Log.e(TAG, "Errore nel parsing del tempo", e);
-            }
-        }
-
-// Usa upcomingEvents invece di allDailyEvents
-        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, upcomingEvents);
-        recyclerView.setAdapter(adapter);
-
         // Aggiungi un listener di click alla view "nextup"
         nextUpView.setOnClickListener(v -> {
 
@@ -151,9 +121,74 @@ public class HomeDailyFragment extends Fragment {
                 newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });
 
+        getParentFragmentManager().setFragmentResultListener("event_saved", this, (requestKey, result) -> {
+            reloadEventList();
+        });
+
+        requireActivity().getSupportFragmentManager().setFragmentResultListener(
+                "event_deleted", this, (requestKey, result) -> {// Quando un evento viene eliminato, ricarica la lista degli eventi
+                    reloadEventList();
+                }
+        );
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Ora è sicuro chiamare reloadEventList()
+        reloadEventList();
+    }
+
+    // Metodo per ricaricare la lista degli eventi dopo l'eliminazione
+    public void reloadEventList() {
+        if (getContext() == null || getView() == null) {
+            return;
+        }
+
+        new Thread(() -> {
+            // Recupera la data attuale dalla TextView
+            String date = dateTextView.getText().toString();
+            List<Event> updatedEventList = EventRoomDatabase.getDatabase(getContext()).eventDAO().getEventsByDate(date);
+
+            // Filtra solo gli eventi nell'arco di trenta minuti
+            List<Event> upcomingEvents = new ArrayList<>();
+            Calendar now = Calendar.getInstance();
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            String currentTimeString = timeFormat.format(now.getTime());
+
+            for (Event event : updatedEventList) {
+                try {
+                    Date eventTime = timeFormat.parse(event.getTime());
+                    Date currentTime = timeFormat.parse(currentTimeString);
+                    long diffMinutes = (eventTime.getTime() - currentTime.getTime()) / (60 * 1000);
+
+                    if (diffMinutes >= -30 && diffMinutes <= 30) {
+                        upcomingEvents.add(event);
+                    }
+                } catch (ParseException e) {
+                    Log.e(TAG, "Errore nel parsing del tempo", e);
+                }
+            }
+
+            // Aggiorna la UI sul thread principale
+            getActivity().runOnUiThread(() -> {
+                RecyclerView eventsRecyclerView = getView().findViewById(R.id.recyclerViewEventNextUp);
+                EventRecyclerAdapter updatedAdapter = new EventRecyclerAdapter(R.layout.card_event, upcomingEvents);
+                eventsRecyclerView.setAdapter(updatedAdapter);
+
+                // Mostra o nasconde il messaggio "Nessun evento prossimo"
+                TextView noEventsTextView = getView().findViewById(R.id.noEventsTextView);
+                if (upcomingEvents.isEmpty()) {
+                    noEventsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noEventsTextView.setVisibility(View.GONE);
+                }
+            });
+        }).start();
+    }
+
     /*private void getCurrentTime() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
