@@ -121,9 +121,11 @@ public class HomeDailyFragment extends Fragment {
                 newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });
 
-        getParentFragmentManager().setFragmentResultListener("event_saved", this, (requestKey, result) -> {
-            reloadEventList();
-        });
+        requireActivity().getSupportFragmentManager().setFragmentResultListener(
+                "event_added", this, (requestKey, result) -> {// Quando un evento viene eliminato, ricarica la lista degli eventi
+                    reloadEventList();
+                }
+        );
 
         requireActivity().getSupportFragmentManager().setFragmentResultListener(
                 "event_deleted", this, (requestKey, result) -> {// Quando un evento viene eliminato, ricarica la lista degli eventi
