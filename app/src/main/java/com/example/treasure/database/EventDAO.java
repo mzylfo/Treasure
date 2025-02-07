@@ -29,6 +29,9 @@ public interface EventDAO {
     @Delete
     void delete(Event events);
 
+    @Query("DELETE FROM Event WHERE id = :eventId")
+    void deleteById(int eventId);
+
     // Nuova funzione per inserire un singolo evento
     @Insert
     void insert(Event event);

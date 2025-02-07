@@ -18,6 +18,15 @@ public interface FeelingDAO {
     @Query("SELECT * FROM Feeling WHERE date = :date")
     List<Feeling> getFeelingsByDate(String date);
 
+    @Query("SELECT COUNT(*) FROM Feeling WHERE strftime('%m %Y', date) = :formattedDate")
+    int countHappiness(String formattedDate);
+
+    @Query("SELECT COUNT(*) FROM Feeling WHERE face = 'sad' AND strftime('%m %Y', date) = :formattedDate")
+    int countSadness(String formattedDate);
+
+    @Query("SELECT COUNT(*) FROM Feeling WHERE face = 'neutral' AND strftime('%m %Y', date) = :formattedDate")
+    int countNeutral(String formattedDate);
+
     @Insert
     void insertAll(Feeling... feelings);
 

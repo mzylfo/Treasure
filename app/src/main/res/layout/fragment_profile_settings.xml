@@ -91,10 +91,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/md_theme_primaryContainer"
                 android:text="@string/log_out"
-                android:textColor="@color/white"
-                app:strokeColor="@color/black" />
+                android:textColor="@color/black"
+                />
 
         </LinearLayout>
 

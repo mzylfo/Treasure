@@ -37,7 +37,7 @@
     <RelativeLayout
         android:id="@+id/events"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
@@ -55,7 +55,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerNextEvents"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_below="@id/events_text" />
     </RelativeLayout>
@@ -79,11 +79,12 @@
     <LinearLayout
         android:id="@+id/feelings"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/rounded_corners_fragment"
         android:orientation="vertical"
         android:padding="20dp">

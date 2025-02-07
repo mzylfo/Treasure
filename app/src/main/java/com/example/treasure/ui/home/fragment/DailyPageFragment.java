@@ -1,22 +1,20 @@
 package com.example.treasure.ui.home.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,12 +25,8 @@ import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.database.FeelingRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
-import com.example.treasure.ui.home.HomeActivity;
-import com.example.treasure.util.JSONParserUtils;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
-import java.util.Objects;
 
 public class DailyPageFragment extends DialogFragment {
 
@@ -51,46 +45,79 @@ public class DailyPageFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_daily_page, container, false);
 
-        /* RIGUARDARE PER BORDI ARROTONDATI
-        View bottomSheet = view.findViewById(R.id.daily_page);
-        if (bottomSheet != null) {
-            bottomSheet.setBackgroundResource(R.drawable.rounded_corners_fragment);
-        }
-        */
-
         // Retrieve the selected date
         String date = getArguments() != null ? getArguments().getString(ARG_DATE) : "No Date";
         TextView dateTextView = view.findViewById(R.id.selectedDateTextView);
         dateTextView.setText(date);
 
-        JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
-
-        //recycler x events
+        // RecyclerView per gli eventi
         RecyclerView eventsRecyclerView = view.findViewById(R.id.recyclerNextEvents);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         List<Event> eventList = EventRoomDatabase.getDatabase(getContext()).eventDAO().getEventsByDate(date);
-        EventRecyclerAdapter adapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
-        eventsRecyclerView.setAdapter(adapter);
+        EventRecyclerAdapter eventAdapter = new EventRecyclerAdapter(R.layout.card_event, eventList);
+        eventsRecyclerView.setAdapter(eventAdapter);
 
-        //recycler x feeling
+        // Imposta il listener di clic
+        eventAdapter.setOnItemClickListener(event -> {
+            // Mostra l'AlertDialog quando un evento viene cliccato
+            showDeleteDialog(event);
+        });
+
+        // RecyclerView per feelings
         RecyclerView feelingsRecyclerView = view.findViewById(R.id.recyclerFeelings);
         feelingsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         List<Feeling> feelingList = FeelingRoomDatabase.getDatabase(view.getContext()).feelingDAO().getFeelingsByDate(date);
         FeelingRecyclerAdapter adapterFeeling = new FeelingRecyclerAdapter(R.layout.card_feeling, feelingList);
         feelingsRecyclerView.setAdapter(adapterFeeling);
 
+        // Azione per il pulsante indietro
         view.findViewById(R.id.back_button).setOnClickListener(v -> {
-            // Quando il pulsante "indietro" viene premuto, semplicemente chiudi il dialogo
             dismiss();
         });
 
+        // Azione per il pulsante di aggiunta di un nuovo evento
         view.findViewById(R.id.button_plus).setOnClickListener(v -> {
             NewEventFragment newEventFragment = NewEventFragment.newInstance(date);
             newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });
 
-
         return view;
+    }
+
+    // Metodo per visualizzare il dialog di eliminazione evento
+    private void showDeleteDialog(Event event) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Vuoi eliminare questo evento?")
+                .setMessage("Sei sicuro di voler eliminare questo evento?")
+                .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Elimina l'evento dal database
+                        EventRoomDatabase.getDatabase(getContext()).eventDAO().delete(event);
+                        // Mostra un messaggio di conferma
+                        Toast.makeText(getContext(), "Evento eliminato", Toast.LENGTH_SHORT).show();
+                        // Ricarica la lista degli eventi
+                        reloadEventList();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Chiudi il dialog senza fare nulla
+                    }
+                })
+                .show();
+    }
+
+    // Metodo per ricaricare la lista degli eventi dopo l'eliminazione
+    private void reloadEventList() {
+        String date = getArguments() != null ? getArguments().getString(ARG_DATE) : "No Date";
+        List<Event> updatedEventList = EventRoomDatabase.getDatabase(getContext()).eventDAO().getEventsByDate(date);
+
+        // Recupera la RecyclerView e aggiorna il suo adattatore
+        RecyclerView eventsRecyclerView = getView().findViewById(R.id.recyclerNextEvents);
+        EventRecyclerAdapter updatedAdapter = new EventRecyclerAdapter(R.layout.card_event, updatedEventList);
+        eventsRecyclerView.setAdapter(updatedAdapter);
     }
 
     @Override
@@ -100,8 +127,6 @@ public class DailyPageFragment extends DialogFragment {
             int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
             getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_dialog);
-
         }
     }
-
 }

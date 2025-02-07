@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.treasure.model.Event;
@@ -14,6 +15,17 @@ import java.util.List;
 public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdapter.ViewHolder> {
     private int layout;
     private List<Event> eventList;
+    private static OnItemClickListener listener;  // Aggiungi un listener
+
+    // Crea un'interfaccia per il listener
+    public interface OnItemClickListener {
+        void onItemClick(Event event); // Metodo per gestire il clic sull'elemento
+    }
+
+    // Aggiungi un metodo per settare il listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewStartDateEvent;
@@ -21,10 +33,15 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
 
         public ViewHolder(View view) {
             super(view);
-            // Define click listener for the ViewHolder's View
-            textViewStartDateEvent = (TextView) view.findViewById(R.id.textview_startdate_event);
-            textViewTitleEvent = (TextView) view.findViewById(R.id.textview_title_event);
+            textViewStartDateEvent = view.findViewById(R.id.textview_startdate_event);
+            textViewTitleEvent = view.findViewById(R.id.textview_title_event);
 
+            // Aggiungi un listener di clic
+            view.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick((Event) v.getTag()); // Usa getTag per ottenere l'oggetto dell'evento
+                }
+            });
         }
 
         public TextView getTextViewStartDateEvent() {
@@ -41,26 +58,26 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         this.eventList = eventList;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(layout, viewGroup, false);
 
         return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.getTextViewStartDateEvent().setText(eventList.get(position).getTime());
-        viewHolder.getTextViewTitleEvent().setText(eventList.get(position).getTitle());
+        Event event = eventList.get(position);
+        viewHolder.getTextViewStartDateEvent().setText(event.getTime());
+        viewHolder.getTextViewTitleEvent().setText(event.getTitle());
+
+        // Imposta l'oggetto Event come tag per ogni vista
+        viewHolder.itemView.setTag(event);
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-  @Override
-  public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return eventList.size();
-   }
+    }
 }
