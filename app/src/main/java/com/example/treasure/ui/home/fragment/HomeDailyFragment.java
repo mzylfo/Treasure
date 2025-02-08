@@ -20,6 +20,7 @@ import com.example.treasure.database.EventDAO;
 import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.EventApiResponse;
+import com.example.treasure.model.WeatherApiResponse;
 import com.example.treasure.util.Constants;
 import com.example.treasure.util.DateParser;
 import com.example.treasure.model.TimeZoneResponse;
@@ -52,6 +53,7 @@ public class HomeDailyFragment extends Fragment {
     private View nextUpView;
     private TextView dateTextView;
     private ImageView happyImageView, neutralImageView, sadImageView;
+    private TextView city, degrees, information;
 
     @Nullable
     @Override
@@ -59,6 +61,26 @@ public class HomeDailyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_daily, container, false);
 
         JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
+
+        try{
+            WeatherApiResponse response = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
+
+            String location = response.getLocation().getName();
+            String temperature = String.valueOf(response.getCurrent().getTemp_c());
+            String condition = response.getCurrent().getCondition().getText();
+
+            city = view.findViewById(R.id.weather_city);
+            degrees = view.findViewById(R.id.weather_degrees);
+            information = view.findViewById(R.id.weather_info);
+
+            city.setText(location);
+            degrees.setText(temperature+"°");
+            information.setText(condition);
+
+        }
+        catch (IOException e){
+
+        }
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventNextUp);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -121,6 +143,8 @@ public class HomeDailyFragment extends Fragment {
                 newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });
 
+
+        // DA CAMBIARE!!!!
         requireActivity().getSupportFragmentManager().setFragmentResultListener(
                 "event_added", this, (requestKey, result) -> {// Quando un evento viene eliminato, ricarica la lista degli eventi
                     reloadEventList();

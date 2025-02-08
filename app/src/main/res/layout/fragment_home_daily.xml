@@ -15,27 +15,44 @@
         android:layout_gravity="center"
         android:text=""/>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/weather_layout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="135dp"
         android:background="@drawable/rounded_corners_fragment"
         android:layout_marginTop="@dimen/margin"
         android:padding="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
         android:layout_marginEnd="@dimen/margin"
+        android:orientation="vertical"
         >
 
     <TextView
-        android:id="@+id/weather_text"
+        android:id="@+id/weather_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="__weather info"
+        android:text=""
         android:textSize="17sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true" />
+        android:layout_gravity="center"/>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/weather_degrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/weather_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="17sp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/nextup"
@@ -67,6 +84,7 @@
             android:id="@+id/noEventsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="17sp"
             android:text="@string/relax_no_events_for_now"
             android:visibility="gone"
             android:layout_centerInParent="true" />

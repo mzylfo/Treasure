@@ -76,10 +76,10 @@ public class DailyPageFragment extends DialogFragment {
         });
 
         // Azione per il pulsante di aggiunta di un nuovo evento
-        view.findViewById(R.id.button_plus).setOnClickListener(v -> {
+        /*view.findViewById(R.id.button_plus).setOnClickListener(v -> {
             NewEventFragment newEventFragment = NewEventFragment.newInstance(date);
             newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
-        });
+        });*/
 
         return view;
     }
@@ -98,6 +98,8 @@ public class DailyPageFragment extends DialogFragment {
                         Toast.makeText(getContext(), "Evento eliminato", Toast.LENGTH_SHORT).show();
                         // Ricarica la lista degli eventi
                         reloadEventList();
+                        //Ricarica i next Events
+                        requireActivity().getSupportFragmentManager().setFragmentResult("event_deleted", new Bundle());
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

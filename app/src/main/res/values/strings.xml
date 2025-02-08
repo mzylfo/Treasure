@@ -45,4 +45,5 @@
     <string name="start_date">Start_Date</string>
     <string name="entry_face">Entry_face</string>
     <string name="relax_no_events_for_now">Relax... no events (for now!)</string>
+    <string name="weather_information">Weather information</string>
 </resources>

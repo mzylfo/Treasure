@@ -8,4 +8,5 @@ public class Constants {
     public static final String SAVED_EVENT_DATABASE = "Event_db";
     public static final String SAVED_FEELING_DATABASE = "Feeling_db";
     public static final String SAMPLE_EVENT_LIST = "sample_event_list.json";
+    public static final String SAMPLE_WEATHER_API = "sample_weather_api.json";
 }
