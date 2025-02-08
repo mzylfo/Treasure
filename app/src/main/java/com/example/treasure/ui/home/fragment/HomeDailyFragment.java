@@ -21,13 +21,20 @@ import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.EventApiResponse;
 import com.example.treasure.model.WeatherApiResponse;
+import com.example.treasure.repository.IWeatherRepository;
+import com.example.treasure.repository.WeatherMockRepository;
+import com.example.treasure.repository.WeatherRepository;
+import com.example.treasure.service.WeatherApiService;
 import com.example.treasure.util.Constants;
 import com.example.treasure.util.DateParser;
 import com.example.treasure.model.TimeZoneResponse;
 import com.example.treasure.util.DateUtils;
 import com.example.treasure.util.JSONParserUtils;
+import com.example.treasure.util.ResponseCallback;
 import com.example.treasure.util.TimeParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -48,12 +55,28 @@ import retrofit2.http.Query;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class HomeDailyFragment extends Fragment {
+public class HomeDailyFragment extends Fragment implements ResponseCallback {
     public static final String TAG = HomeDailyFragment.class.getName();
     private View nextUpView;
     private TextView dateTextView;
     private ImageView happyImageView, neutralImageView, sadImageView;
     private TextView city, degrees, information;
+    private CircularProgressIndicator progressIndicator;
+    private IWeatherRepository weatherRepository;
+    private WeatherApiResponse weather;
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        weather = new WeatherApiResponse();
+
+        if(requireActivity().getResources().getBoolean(R.bool.debug_mode)){
+            weatherRepository = new WeatherMockRepository(requireActivity().getApplication(), this);
+        }
+        else{
+            weatherRepository = new WeatherRepository(requireActivity().getApplication(), this);
+        }
+    }
 
     @Nullable
     @Override
@@ -62,7 +85,30 @@ public class HomeDailyFragment extends Fragment {
 
         JSONParserUtils jsonParserUtils = new JSONParserUtils(getContext());
 
-        try{
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventNextUp);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        happyImageView = view.findViewById(R.id.happy);
+        neutralImageView = view.findViewById(R.id.neutral);
+        sadImageView = view.findViewById(R.id.sad);
+
+
+        city = view.findViewById(R.id.weather_city);
+        degrees = view.findViewById(R.id.weather_degrees);
+        information = view.findViewById(R.id.weather_info);
+
+        //definizione dei due bottoni
+        FloatingActionButton fabLeft = view.findViewById(R.id.fab_left);
+        FloatingActionButton fabRight = view.findViewById(R.id.fab_right);
+
+        progressIndicator = view.findViewById(R.id.progressIndicator);
+
+        weatherRepository.fetchWeather("Milan", "no", 1000);
+
+
+
+
+        /*try{
             WeatherApiResponse response = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
 
             String location = response.getLocation().getName();
@@ -80,18 +126,7 @@ public class HomeDailyFragment extends Fragment {
         }
         catch (IOException e){
 
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEventNextUp);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
-        happyImageView = view.findViewById(R.id.happy);
-        neutralImageView = view.findViewById(R.id.neutral);
-        sadImageView = view.findViewById(R.id.sad);
-
-        //definizione dei due bottoni
-        FloatingActionButton fabLeft = view.findViewById(R.id.fab_left);
-        FloatingActionButton fabRight = view.findViewById(R.id.fab_right);
+        }*/
 
         // Trova la view "nextup"
         nextUpView = view.findViewById(R.id.nextup);
@@ -215,6 +250,31 @@ public class HomeDailyFragment extends Fragment {
         }).start();
     }
 
+    @Override
+    public void onSuccess(WeatherApiResponse weather, long lastUpdate) {
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String location = weather.getLocation().getName();
+                String temperature = String.valueOf(weather.getCurrent().getTemp_c());
+                String condition = weather.getCurrent().getCondition().getText();
+
+                city.setText(location);
+                degrees.setText(temperature+"°");
+                information.setText(condition);
+                city.setVisibility(View.VISIBLE);
+                degrees.setVisibility(View.VISIBLE);
+                information.setVisibility(View.VISIBLE);
+                progressIndicator.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        Snackbar.make(degrees, errorMessage, Snackbar.LENGTH_LONG).show();
+    }
+
     /*private void getCurrentTime() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -260,4 +320,42 @@ public class HomeDailyFragment extends Fragment {
         );
     }
     */
+
+    /*private void getCurrentWeather() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.weatherapi.com/v1/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherApiService apiService = retrofit.create(WeatherApiService.class);
+        Call<WeatherApiResponse> call = apiService.getWeather("a521e7464e78415e85d182732250802", "London", "no");
+        call.enqueue(new Callback<WeatherApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WeatherApiResponse> call, @NonNull Response<WeatherApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    WeatherApiResponse weatherResponse = response.body();
+                    Log.d(TAG, "Weather Response: " + weatherResponse.toString());
+                    // Puoi aggiornare la UI qui con i dati della risposta
+                } else {
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e(TAG, "Response not successful: " + response.message() + ", Error Body: " + errorBody);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WeatherApiResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "API call failed: " + t.getMessage());
+            }
+        });
+    }*/
 }

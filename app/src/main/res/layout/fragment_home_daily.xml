@@ -26,14 +26,22 @@
         android:layout_marginEnd="@dimen/margin"
         android:orientation="vertical"
         >
-
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:indeterminate="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        />
     <TextView
         android:id="@+id/weather_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="17sp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/weather_degrees"
@@ -42,7 +50,8 @@
             android:text=""
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/weather_info"
@@ -50,7 +59,8 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="17sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

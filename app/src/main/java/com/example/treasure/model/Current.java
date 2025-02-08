@@ -1,9 +1,11 @@
 package com.example.treasure.model;
 
+import androidx.room.Embedded;
+
 public class Current {
     private double temp_c;
     private int is_day;
-    private Condition condition;
+    @Embedded private Condition condition;
 
     // Getters e Setters
     public double getTemp_c() {

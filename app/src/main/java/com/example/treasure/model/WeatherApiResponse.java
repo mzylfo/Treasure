@@ -1,8 +1,14 @@
 package com.example.treasure.model;
 
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class WeatherApiResponse {
-    private Location location;
-    private Current current;
+    @PrimaryKey private int uid;
+    @Embedded public Location location;
+    @Embedded public Current current;
 
     // Getters e Setters
     public Location getLocation() {
@@ -19,5 +25,13 @@ public class WeatherApiResponse {
 
     public void setCurrent(Current current) {
         this.current = current;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 }
