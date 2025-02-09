@@ -30,12 +30,14 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
 
     private static final String ARG_FEELING = "feeling";
     private static final String ARG_DATE = "date";
+    private static final String ARG_CONDITION = "condition";
 
-    public static NewFeelingFragment newInstance(int feeling, String date) {
+    public static NewFeelingFragment newInstance(int feeling, String date, String condition) {
         NewFeelingFragment fragment = new NewFeelingFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_FEELING, feeling);
         args.putString(ARG_DATE, date);
+        args.putString(ARG_CONDITION, condition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,12 +69,13 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             int entryFace = getArguments().getInt(ARG_FEELING);
             String date = getArguments().getString(ARG_DATE);
+            String condition = getArguments().getString(ARG_CONDITION);
             // Usa l'intero "feeling" come necessario
 
             String entryText = feelingEntryEditText.getText().toString();
             String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
-            Feeling newFeeling = new Feeling(entryText, entryFace, date, time);
+            Feeling newFeeling = new Feeling(entryText, entryFace, date, time, condition);
             // Ottieni l'istanza del database
             FeelingRoomDatabase db = FeelingRoomDatabase.getDatabase(getContext());
 
@@ -83,17 +86,5 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
         }
 
         dismiss();
-    }
-
-    private String formatTime(String time) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("H:mm", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            Date date = inputFormat.parse(time);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return time; // Ritorna l'ora originale in caso di errore
-        }
     }
 }

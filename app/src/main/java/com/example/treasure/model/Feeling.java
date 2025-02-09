@@ -12,12 +12,14 @@ public class Feeling {
     private String text; //testo inserito --> -1 is sad, 0 is neutral, 1 is happy
     private String date; //data dell'inserimento
     private String time; //ora dell'inserimento
+    private String condition; //informazioni sul meteo per le statistiche
 
-    public Feeling(String text, int face, String date, String time) {
+    public Feeling(String text, int face, String date, String time, String condition) {
         this.text = text;
         this.face = face;
         this.date = date;
         this.time = time;
+        this.condition = condition;
     }
 
     public int getId() {
@@ -58,5 +60,13 @@ public class Feeling {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getCondition(){
+        return condition;
+    }
+
+    public void setCondition(String condition){
+        this.condition = condition;
     }
 }

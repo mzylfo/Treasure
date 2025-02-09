@@ -1,5 +1,6 @@
 package com.example.treasure.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class FeelingRecyclerAdapter extends RecyclerView.Adapter<FeelingRecycler
         Feeling feeling = feelingList.get(position);
         holder.getTextViewEntryText().setText(feeling.getText());
         holder.getTextViewEntryFace().setText(FeelingUtils.getFeelingString(feeling.getFace())); // Usa il metodo di utilità
-        holder.getTextViewEntryTime().setText(feeling.getTime());
+        holder.getTextViewEntryTime().setText(feeling.getTime()+" - "+feeling.getCondition());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

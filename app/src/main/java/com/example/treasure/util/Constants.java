@@ -16,5 +16,13 @@ public class Constants {
     public static final String CURRENT = "current.json";
     public static final String CURRENT_CITY = "q";
     public static final String CONDITIONS = "aqi";
+    public static final String HEADER = "key";
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
+
+    public static final String RETROFIT_ERROR = "retrofit_error";
+    public static final String API_KEY_ERROR = "api_key_error";
+    public static final String UNEXPECTED_ERROR = "unexpected_error";
+
+    public static final String SHARED_PREFERENCES_FILENAME = "com.example.unimib.preferences";
+    public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
 }

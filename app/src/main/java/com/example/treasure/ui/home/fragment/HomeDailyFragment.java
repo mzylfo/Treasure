@@ -5,57 +5,48 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.treasure.R;
 import com.example.treasure.adapter.EventRecyclerAdapter;
-import com.example.treasure.database.EventDAO;
 import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
-import com.example.treasure.model.EventApiResponse;
-import com.example.treasure.model.WeatherApiResponse;
+import com.example.treasure.model.Result;
+import com.example.treasure.model.Weather;
 import com.example.treasure.repository.IWeatherRepository;
 import com.example.treasure.repository.WeatherMockRepository;
-import com.example.treasure.repository.WeatherRepository;
-import com.example.treasure.service.WeatherApiService;
 import com.example.treasure.util.Constants;
-import com.example.treasure.util.DateParser;
-import com.example.treasure.model.TimeZoneResponse;
+import com.example.treasure.util.NetworkUtil;
+import com.example.treasure.ui.home.viewmodel.WeatherViewModelFactory;
+import com.example.treasure.repository.WeatherRepository;
+import com.example.treasure.ui.home.viewmodel.WeatherViewModel;
 import com.example.treasure.util.DateUtils;
 import com.example.treasure.util.JSONParserUtils;
 import com.example.treasure.util.ResponseCallback;
-import com.example.treasure.util.TimeParser;
+import com.example.treasure.util.ServiceLocator;
+import com.example.treasure.util.SharedPreferencesUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class HomeDailyFragment extends Fragment implements ResponseCallback {
+public class HomeDailyFragment extends Fragment {
     public static final String TAG = HomeDailyFragment.class.getName();
     private View nextUpView;
     private TextView dateTextView;
@@ -63,19 +54,27 @@ public class HomeDailyFragment extends Fragment implements ResponseCallback {
     private TextView city, degrees, information;
     private CircularProgressIndicator progressIndicator;
     private IWeatherRepository weatherRepository;
-    private WeatherApiResponse weather;
+    private Weather weather;
+    private String forecast;
+    private SharedPreferencesUtils sharedPreferencesUtils;
+    private WeatherViewModel weatherViewModel;
+    private FrameLayout noInternetView;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        weather = new WeatherApiResponse();
+        sharedPreferencesUtils = new SharedPreferencesUtils(requireActivity().getApplication());
 
-        if(requireActivity().getResources().getBoolean(R.bool.debug_mode)){
-            weatherRepository = new WeatherMockRepository(requireActivity().getApplication(), this);
-        }
-        else{
-            weatherRepository = new WeatherRepository(requireActivity().getApplication(), this);
-        }
+        WeatherRepository weatherRepository =
+                ServiceLocator.getInstance().getWeatherRepository(
+                        requireActivity().getApplication(),
+                        requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
+                );
+
+        weatherViewModel = new ViewModelProvider(
+                requireActivity(),
+                new WeatherViewModelFactory(weatherRepository)).get(WeatherViewModel.class);
+
     }
 
     @Nullable
@@ -91,7 +90,7 @@ public class HomeDailyFragment extends Fragment implements ResponseCallback {
         happyImageView = view.findViewById(R.id.happy);
         neutralImageView = view.findViewById(R.id.neutral);
         sadImageView = view.findViewById(R.id.sad);
-
+        noInternetView = view.findViewById(R.id.noInternetMessage);
 
         city = view.findViewById(R.id.weather_city);
         degrees = view.findViewById(R.id.weather_degrees);
@@ -103,30 +102,69 @@ public class HomeDailyFragment extends Fragment implements ResponseCallback {
 
         progressIndicator = view.findViewById(R.id.progressIndicator);
 
-        weatherRepository.fetchWeather("Milan", "no", 1000);
+        String lastUpdate = "0";
 
-
-
-
-        /*try{
-            WeatherApiResponse response = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
-
-            String location = response.getLocation().getName();
-            String temperature = String.valueOf(response.getCurrent().getTemp_c());
-            String condition = response.getCurrent().getCondition().getText();
-
-            city = view.findViewById(R.id.weather_city);
-            degrees = view.findViewById(R.id.weather_degrees);
-            information = view.findViewById(R.id.weather_info);
-
-            city.setText(location);
-            degrees.setText(temperature+"°");
-            information.setText(condition);
-
+        sharedPreferencesUtils = new SharedPreferencesUtils(getContext());
+        if (sharedPreferencesUtils.readStringData(
+                Constants.SHARED_PREFERENCES_FILENAME, Constants.SHARED_PREFERNECES_LAST_UPDATE) != null) {
+            lastUpdate = sharedPreferencesUtils.readStringData(
+                    Constants.SHARED_PREFERENCES_FILENAME, Constants.SHARED_PREFERNECES_LAST_UPDATE);
         }
-        catch (IOException e){
 
-        }*/
+
+        if (!NetworkUtil.isInternetAvailable(getContext())) {
+            noInternetView.setVisibility(View.VISIBLE);
+
+            //Trick to avoid doing the API call
+            lastUpdate = System.currentTimeMillis() + "";
+        }
+
+
+        weatherViewModel.getWeather("Milan", "no", Long.parseLong(lastUpdate)).observe(getViewLifecycleOwner(),
+                result -> {
+                    if (result.isSuccess()) {
+                        weather = (((Result.Success) result).getData());
+                        if (weather != null && weather.getLocation() != null) {
+                        weather = (((Result.Success) result).getData());
+                        String location = weather.getLocation().getName();
+                        String temperature = String.valueOf(weather.getCurrent().getTemp_c());
+                        String condition = weather.getCurrent().getCondition().getText();
+
+                        city.setText(location);
+                        degrees.setText(temperature+" °");
+                        information.setText(condition);
+
+                        forecast = condition;
+                        city.setVisibility(View.VISIBLE);
+                        degrees.setVisibility(View.VISIBLE);
+                        information.setVisibility(View.VISIBLE);
+                        progressIndicator.setVisibility(View.GONE);
+
+                    } else {
+                            if (weather == null) {
+                                Log.e(TAG, "Weather is null");
+                            } else if (weather.getLocation() == null) {
+                                Log.e(TAG, "Location is null");
+                            }
+                 } } else {
+            // Log the error message
+            if (result instanceof Result.Error) {
+                Result.Error errorResult = (Result.Error) result;
+                String errorMessage = errorResult.getMessage();
+                Log.e(TAG, "Error retrieving weather: " + errorMessage);
+
+                if ("api_key_error".equals(errorMessage)) {
+                    Snackbar.make(view, "Invalid API key. Please check your API key.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, "Error retrieving weather: " + errorMessage, Snackbar.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e(TAG, "Unknown error retrieving weather");
+                Snackbar.make(view, "Unknown error retrieving weather", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    });
+
 
         // Trova la view "nextup"
         nextUpView = view.findViewById(R.id.nextup);
@@ -151,17 +189,17 @@ public class HomeDailyFragment extends Fragment implements ResponseCallback {
         });
 
         view.findViewById(R.id.happy).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(1, date);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(1, date, forecast);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.neutral).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(0, date);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(0, date, forecast);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
         view.findViewById(R.id.sad).setOnClickListener(v -> {
-            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1, date);
+            NewFeelingFragment newFeelingFragment = NewFeelingFragment.newInstance(-1, date, forecast);
             newFeelingFragment.show(getParentFragmentManager(), newFeelingFragment.getTag());
         });
 
@@ -250,112 +288,4 @@ public class HomeDailyFragment extends Fragment implements ResponseCallback {
         }).start();
     }
 
-    @Override
-    public void onSuccess(WeatherApiResponse weather, long lastUpdate) {
-        requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String location = weather.getLocation().getName();
-                String temperature = String.valueOf(weather.getCurrent().getTemp_c());
-                String condition = weather.getCurrent().getCondition().getText();
-
-                city.setText(location);
-                degrees.setText(temperature+"°");
-                information.setText(condition);
-                city.setVisibility(View.VISIBLE);
-                degrees.setVisibility(View.VISIBLE);
-                information.setVisibility(View.VISIBLE);
-                progressIndicator.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    @Override
-    public void onFailure(String errorMessage) {
-        Snackbar.make(degrees, errorMessage, Snackbar.LENGTH_LONG).show();
-    }
-
-    /*private void getCurrentTime() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.timezonedb.com/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-        Call<TimeZoneResponse> call = apiService.getTimeZone("EFI0PITZ4VQC", "json", "zone", "Europe/Rome");
-        call.enqueue(new Callback<TimeZoneResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<TimeZoneResponse> call, @NonNull Response<TimeZoneResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    String formattedDate = response.body().getFormatted();
-                    String formattedDateWithNewFormat = DateParser.formatDate(formattedDate);
-                    dateTextView.setText(formattedDateWithNewFormat);
-                } else {
-                    dateTextView.setText("Errore nella risposta");
-                    Log.e("HomeDailyFragment", "Response error: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<TimeZoneResponse> call, @NonNull Throwable t) {
-                dateTextView.setText("Errore di rete: " + t.getMessage());
-                Log.e("HomeDailyFragment", "Network error", t);
-            }
-        });
-    }
-
-    public interface ApiService {
-        @GET("v2.1/get-time-zone")
-        Call<TimeZoneResponse> getTimeZone(
-                @Query("key") String key,
-                @Query("format") String format,
-                @Query("by") String by,
-                @Query("zone") String zone
-        );
-    }
-    */
-
-    /*private void getCurrentWeather() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.weatherapi.com/v1/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        WeatherApiService apiService = retrofit.create(WeatherApiService.class);
-        Call<WeatherApiResponse> call = apiService.getWeather("a521e7464e78415e85d182732250802", "London", "no");
-        call.enqueue(new Callback<WeatherApiResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<WeatherApiResponse> call, @NonNull Response<WeatherApiResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    WeatherApiResponse weatherResponse = response.body();
-                    Log.d(TAG, "Weather Response: " + weatherResponse.toString());
-                    // Puoi aggiornare la UI qui con i dati della risposta
-                } else {
-                    try {
-                        String errorBody = response.errorBody().string();
-                        Log.e(TAG, "Response not successful: " + response.message() + ", Error Body: " + errorBody);
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error reading error body", e);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<WeatherApiResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "API call failed: " + t.getMessage());
-            }
-        });
-    }*/
 }

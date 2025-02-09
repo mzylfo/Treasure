@@ -1,6 +1,5 @@
 package com.example.treasure.database;
 
-import com.example.treasure.model.Current;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -8,26 +7,30 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.treasure.model.WeatherApiResponse;
-import com.example.treasure.service.WeatherApiService;
+import com.example.treasure.model.Weather;
+
+import java.util.List;
 
 @Dao
 public interface WeatherDAO {
-    @Query("SELECT * FROM WeatherApiResponse")
-    WeatherApiResponse getAll();
+    @Query("SELECT * FROM Weather")
+    List<Weather> getAll();
 
-    @Query("SELECT * FROM WeatherApiResponse")
-    WeatherApiResponse getLatestWeather();
+    @Query("SELECT * FROM Weather ORDER BY uid DESC LIMIT 1")
+    Weather getWeather();
+
+    @Query("SELECT * FROM Weather WHERE uid = :uid")
+    Weather getWeather(int uid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(WeatherApiResponse... weathers);
+    void insert(Weather... weathers);
 
     @Update
-    void update(WeatherApiResponse weather);
+    int update(Weather weather);
 
     @Insert
-    void insertAll(WeatherApiResponse... weathers);
+    void insertAll(Weather... weathers);
 
     @Delete
-    void deleteAll(WeatherApiResponse... weathers);
+    void deleteAll(Weather... weathers);
 }

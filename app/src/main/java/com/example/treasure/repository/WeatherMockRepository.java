@@ -4,8 +4,8 @@ import android.app.Application;
 
 import com.example.treasure.database.WeatherDAO;
 import com.example.treasure.database.WeatherRoomDatabase;
-import com.example.treasure.model.WeatherApiResponse;
-import com.example.treasure.service.ServiceLocator;
+import com.example.treasure.model.Weather;
+import com.example.treasure.util.ServiceLocator;
 import com.example.treasure.util.Constants;
 import com.example.treasure.util.JSONParserUtils;
 import com.example.treasure.util.ResponseCallback;
@@ -28,7 +28,7 @@ public class WeatherMockRepository implements IWeatherRepository {
         JSONParserUtils jsonParserUtils = new JSONParserUtils(application.getApplicationContext());
 
         try {
-            WeatherApiResponse weatherApiResponse = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
+            Weather weatherApiResponse = jsonParserUtils.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
             if (weatherApiResponse != null) {
                 saveDataInDatabase(weatherApiResponse);
             } else {
@@ -39,7 +39,7 @@ public class WeatherMockRepository implements IWeatherRepository {
         }
     }
 
-    private void saveDataInDatabase(WeatherApiResponse weather) {
+    private void saveDataInDatabase(Weather weather) {
         WeatherRoomDatabase.databaseWriteExecutor.execute(() -> {
             try {
                 weatherDAO.insert(weather);
@@ -51,7 +51,7 @@ public class WeatherMockRepository implements IWeatherRepository {
     }
 
     @Override
-    public void updateWeather(WeatherApiResponse weather) {
+    public void updateWeather(Weather weather) {
         // Implementazione del metodo updateWeather se necessario
     }
 
@@ -62,7 +62,7 @@ public class WeatherMockRepository implements IWeatherRepository {
 
     private void readDataFromDatabase(long lastUpdate) {
         WeatherRoomDatabase.databaseWriteExecutor.execute(() -> {
-            responseCallback.onSuccess(weatherDAO.getAll(), lastUpdate);
+            responseCallback.onSuccess(weatherDAO.getWeather(), lastUpdate);
         });
     }
 }

@@ -46,5 +46,5 @@
     <string name="entry_face">Entry_face</string>
     <string name="relax_no_events_for_now">Relax... no events (for now!)</string>
     <string name="weather_information">Weather information</string>
-    <string name="news_api_key">a521e7464e78415e85d182732250802</string>
+    <string name="weather_api_key">a521e7464e78415e85d182732250802</string>
 </resources>

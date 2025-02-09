@@ -201,5 +201,23 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="?attr/colorOnSurface"
+        android:layout_gravity="top|center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/noInternetMessage">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text="No internet connection" />
+    </FrameLayout>
+
+
 </LinearLayout>
 

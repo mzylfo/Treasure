@@ -1,11 +1,10 @@
 package com.example.treasure.repository;
 
-import com.example.treasure.model.WeatherApiResponse;
-import com.example.treasure.service.WeatherApiService;
+import com.example.treasure.model.Weather;
 
 public interface IWeatherRepository {
 
-    void updateWeather(WeatherApiResponse weather);
+    void updateWeather(Weather weather);
     void fetchWeather(String city, String condition, long lastUpdate);
     void deleteWeather();
 }
