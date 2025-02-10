@@ -2,8 +2,6 @@ package com.example.treasure.source;
 
 import com.example.treasure.model.Weather;
 
-import java.util.List;
-
 public abstract class BaseWeatherLocalDataSource {
     protected WeatherCallback weatherCallback;
 
@@ -11,7 +9,7 @@ public abstract class BaseWeatherLocalDataSource {
         this.weatherCallback = weatherCallback;
     }
 
-    public abstract void getWeather();
+    public abstract void getWeather(String city);
 
     public abstract void updateWeather(Weather weather);
 

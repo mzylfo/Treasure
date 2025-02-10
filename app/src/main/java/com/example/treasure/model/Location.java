@@ -74,4 +74,11 @@ public class Location {
     public void setLocaltime(String localtime) {
         this.localtime = localtime;
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

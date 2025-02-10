@@ -29,7 +29,7 @@ public class WeatherLocalDataSource extends BaseWeatherLocalDataSource {
      * because the database access cannot be executed in the main thread.
      */
     @Override
-    public void getWeather() {
+    public void getWeather(String city) {
         WeatherRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Weather> weatherList = weatherDAO.getAll();
             if (weatherList != null && !weatherList.isEmpty()) {

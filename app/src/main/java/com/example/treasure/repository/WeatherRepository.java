@@ -9,9 +9,6 @@ import com.example.treasure.source.BaseWeatherLocalDataSource;
 import com.example.treasure.source.BaseWeatherRemoteDataSource;
 import com.example.treasure.source.WeatherCallback;
 import com.example.treasure.model.Result;
-import java.util.List;
-
-
 
 /**
  * Repository class to get the news from local or from a remote source.
@@ -26,7 +23,7 @@ public class WeatherRepository implements WeatherCallback {
 
     public WeatherRepository(BaseWeatherRemoteDataSource weatherRemoteDataSource,
                              BaseWeatherLocalDataSource weatherLocalDataSource) {
-        
+
         weatherMutableLiveData = new MutableLiveData<>();
         this.weatherRemoteDataSource = weatherRemoteDataSource;
         this.weatherLocalDataSource = weatherLocalDataSource;
@@ -42,43 +39,36 @@ public class WeatherRepository implements WeatherCallback {
         if (currentTime - lastUpdate > FRESH_TIMEOUT) {
             weatherRemoteDataSource.getWeather(city, conditions);
         } else {
-            weatherLocalDataSource.getWeather();
+            weatherLocalDataSource.getWeather(city);
         }
 
         return weatherMutableLiveData;
     }
 
-
-    public MutableLiveData<Result> getWeather() {
-        weatherLocalDataSource.getWeather();
-        return weatherMutableLiveData;
+    @Override
+    public void onSuccessFromRemote(Weather weather, long lastUpdate) {
+        weatherMutableLiveData.postValue(new Result.Success(weather));
+        weatherLocalDataSource.insertWeather(weather);
     }
 
-    public void updateWeather(Weather weather) {
-        weatherLocalDataSource.updateWeather(weather);
-    }
-
-    public void onSuccessFromRemote(Weather weatherApiResponse, long lastUpdate) {
-        weatherLocalDataSource.insertWeather(weatherApiResponse);
-    }
-
+    @Override
     public void onFailureFromRemote(Exception exception) {
-        Result.Error result = new Result.Error(exception.getMessage());
-        weatherMutableLiveData.postValue(result);
+        weatherMutableLiveData.postValue(new Result.Error(exception.getMessage()));
     }
 
-    public void onSuccessFromLocal(Weather weather){
-        Result.Success result = new Result.Success(new Weather());
-        weatherMutableLiveData.postValue(result);
+    @Override
+    public void onSuccessFromLocal(Weather weather) {
+        weatherMutableLiveData.postValue(new Result.Success(weather));
     }
 
+    @Override
     public void onFailureFromLocal(Exception exception) {
-        Result.Error resultError = new Result.Error(exception.getMessage());
-        weatherMutableLiveData.postValue(resultError);
-        weatherMutableLiveData.postValue(resultError);
+        weatherMutableLiveData.postValue(new Result.Error(exception.getMessage()));
     }
 
+    @Override
     public void onWeatherStatusChanged(Weather weather) {
-        weatherMutableLiveData.postValue(new Result.Success(new Weather()));
+
     }
+
 }

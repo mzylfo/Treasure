@@ -31,4 +31,12 @@ public class Current {
     public void setCondition(Condition condition) {
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "Current{" +
+                "temp_c=" + temp_c +
+                ", condition=" + condition +
+                '}';
+    }
 }

@@ -8,4 +8,5 @@ public interface WeatherCallback {
     void onSuccessFromLocal(Weather weather);
     void onFailureFromLocal(Exception exception);
     void onWeatherStatusChanged(Weather weather);
+
 }

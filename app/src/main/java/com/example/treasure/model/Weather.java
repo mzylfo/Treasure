@@ -34,4 +34,12 @@ public class Weather {
     public void setUid(int uid) {
         this.uid = uid;
     }
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "location=" + location +
+                ", current=" + current +
+                '}';
+    }
 }

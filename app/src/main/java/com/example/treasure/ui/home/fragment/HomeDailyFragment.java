@@ -45,6 +45,8 @@ import java.util.List;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeDailyFragment extends Fragment {
     public static final String TAG = HomeDailyFragment.class.getName();
@@ -124,46 +126,62 @@ public class HomeDailyFragment extends Fragment {
                 result -> {
                     if (result.isSuccess()) {
                         weather = (((Result.Success) result).getData());
-                        if (weather != null && weather.getLocation() != null) {
-                        weather = (((Result.Success) result).getData());
-                        String location = weather.getLocation().getName();
-                        String temperature = String.valueOf(weather.getCurrent().getTemp_c());
-                        String condition = weather.getCurrent().getCondition().getText();
+                        Log.d(TAG, "Weather data: " + weather.toString()); // Aggiungi questo log
+                        if (weather != null) {
+                            String apiResponse = weather.toString();
 
-                        city.setText(location);
-                        degrees.setText(temperature+" °");
-                        information.setText(condition);
+                            // Usa espressioni regolari per estrarre i valori
+                            Pattern locationPattern = Pattern.compile("location=Location\\{name='([^']*)'\\}");
+                            Pattern tempPattern = Pattern.compile("temp_c=([0-9.]+)");
+                            Pattern conditionPattern = Pattern.compile("condition=Condition\\{text='([^']*)'\\}");
 
-                        forecast = condition;
-                        city.setVisibility(View.VISIBLE);
-                        degrees.setVisibility(View.VISIBLE);
-                        information.setVisibility(View.VISIBLE);
-                        progressIndicator.setVisibility(View.GONE);
+                            Matcher locationMatcher = locationPattern.matcher(apiResponse);
+                            Matcher tempMatcher = tempPattern.matcher(apiResponse);
+                            Matcher conditionMatcher = conditionPattern.matcher(apiResponse);
 
-                    } else {
+                            String location = "";
+                            String temperature = "";
+                            String condition = "";
+
+                            if (locationMatcher.find()) {
+                                location = locationMatcher.group(1);
+                            }
+                            if (tempMatcher.find()) {
+                                temperature = tempMatcher.group(1);
+                            }
+                            if (conditionMatcher.find()) {
+                                condition = conditionMatcher.group(1);
+                            }
+
+                            Log.d(TAG, "Location: " + location);
+                            Log.d(TAG, "Temperature: " + temperature);
+                            Log.d(TAG, "Condition: " + condition);
+
+                            city.setText(location);
+                            degrees.setText(temperature + " °");
+                            information.setText(condition);
+
+                            forecast = condition;
+                            city.setVisibility(View.VISIBLE);
+                            degrees.setVisibility(View.VISIBLE);
+                            information.setVisibility(View.VISIBLE);
+                            progressIndicator.setVisibility(View.GONE);
+
+
+                        } else {
                             if (weather == null) {
                                 Log.e(TAG, "Weather is null");
                             } else if (weather.getLocation() == null) {
                                 Log.e(TAG, "Location is null");
                             }
-                 } } else {
-            // Log the error message
-            if (result instanceof Result.Error) {
-                Result.Error errorResult = (Result.Error) result;
-                String errorMessage = errorResult.getMessage();
-                Log.e(TAG, "Error retrieving weather: " + errorMessage);
-
-                if ("api_key_error".equals(errorMessage)) {
-                    Snackbar.make(view, "Invalid API key. Please check your API key.", Snackbar.LENGTH_LONG).show();
-                } else {
-                    Snackbar.make(view, "Error retrieving weather: " + errorMessage, Snackbar.LENGTH_SHORT).show();
-                }
-            } else {
-                Log.e(TAG, "Unknown error retrieving weather");
-                Snackbar.make(view, "Unknown error retrieving weather", Snackbar.LENGTH_SHORT).show();
-            }
-        }
-    });
+                        }
+                    } else {
+                        // Log the error message
+                        if (result instanceof Result.Error) {
+                            Log.e(TAG, "Error: " + ((Result.Error) result).getMessage());
+                        }
+                    }
+                });
 
 
         // Trova la view "nextup"
@@ -287,5 +305,4 @@ public class HomeDailyFragment extends Fragment {
             });
         }).start();
     }
-
 }

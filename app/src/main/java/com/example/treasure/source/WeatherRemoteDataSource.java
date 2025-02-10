@@ -1,7 +1,10 @@
 package com.example.treasure.source;
 
+import static android.content.ContentValues.TAG;
 import static com.example.treasure.util.Constants.API_KEY_ERROR;
 import static com.example.treasure.util.Constants.RETROFIT_ERROR;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -32,19 +35,19 @@ public class WeatherRemoteDataSource extends BaseWeatherRemoteDataSource {
 
         newsResponseCall.enqueue(new Callback<Weather>() {
             @Override
-            public void onResponse(@NonNull Call<Weather> call,
-                                   @NonNull Response<Weather> response) {
-
+            public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
                 if (response.body() != null && response.isSuccessful()) {
+                    Log.d(TAG, "API Response: " + response.body().toString()); // Log per vedere la risposta dell'API
                     weatherCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
-
                 } else {
+                    Log.e(TAG, "API Response is null or unsuccessful");
                     weatherCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
+                Log.e(TAG, "API Call failed: " + t.getMessage());
                 weatherCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });
