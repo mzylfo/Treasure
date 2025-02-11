@@ -4,8 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.treasure.repository.WeatherRepository;
-import com.example.treasure.ui.home.viewmodel.WeatherViewModel;
+import com.example.treasure.repository.weather.WeatherRepository;
 
 /**
  * Custom ViewModelProvider to be able to have a custom constructor

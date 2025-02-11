@@ -1,12 +1,14 @@
 package com.example.treasure.source;
 
+import com.example.treasure.repository.weather.WeatherResponseCallback;
+
 /**
  * Base class to get weather from a remote source.
  */
 public abstract class BaseWeatherRemoteDataSource {
-    protected WeatherCallback weatherCallback;
+    protected WeatherResponseCallback weatherCallback;
 
-    public void setWeatherCallback(WeatherCallback weatherCallback) {
+    public void setWeatherCallback(WeatherResponseCallback weatherCallback) {
         this.weatherCallback = weatherCallback;
     }
 

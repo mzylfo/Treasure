@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.example.treasure.R;
 import com.example.treasure.database.WeatherRoomDatabase;
-import com.example.treasure.repository.WeatherRepository;
+import com.example.treasure.repository.weather.WeatherRepository;
 import com.example.treasure.service.WeatherApiService;
 import com.example.treasure.source.BaseWeatherLocalDataSource;
 import com.example.treasure.source.BaseWeatherRemoteDataSource;

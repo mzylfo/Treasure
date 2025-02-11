@@ -1,11 +1,12 @@
 package com.example.treasure.source;
 
 import com.example.treasure.model.Weather;
+import com.example.treasure.repository.weather.WeatherResponseCallback;
 
 public abstract class BaseWeatherLocalDataSource {
-    protected WeatherCallback weatherCallback;
+    protected WeatherResponseCallback weatherCallback;
 
-    public void setWeatherCallback(WeatherCallback weatherCallback) {
+    public void setWeatherResponseCallback(WeatherResponseCallback weatherCallback) {
         this.weatherCallback = weatherCallback;
     }
 

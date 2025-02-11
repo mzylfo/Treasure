@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.treasure.model.Result;
-import com.example.treasure.repository.WeatherRepository;
+import com.example.treasure.repository.weather.WeatherRepository;
 
 public class WeatherViewModel extends ViewModel {
 
