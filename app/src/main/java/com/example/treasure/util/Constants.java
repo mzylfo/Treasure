@@ -23,8 +23,8 @@ public class Constants {
     public static final String API_KEY_ERROR = "api_key_error";
     public static final String UNEXPECTED_ERROR = "unexpected_error";
 
-    public static final String SHARED_PREFERENCES_FILENAME = "com.example.unimib.preferences";
-    public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
+    /*public static final String SHARED_PREFERENCES_FILENAME = "com.example.unimib.preferences";
+    public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";*/
 
     public static final String INVALID_USER_ERROR = "invalidUserError";
     public static final String INVALID_CREDENTIALS_ERROR = "invalidCredentials";
@@ -35,4 +35,5 @@ public class Constants {
     public static final String FIREBASE_USERS_COLLECTION = "users";
     public static final String FIREBASE_EVENT_COLLECTION = "events";
     public static final String FIREBASE_FEELING_COLLECTION = "feelings";
+
 }

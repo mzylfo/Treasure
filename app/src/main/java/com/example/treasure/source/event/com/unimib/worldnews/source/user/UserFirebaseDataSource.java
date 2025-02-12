@@ -1,29 +1,28 @@
-package com.example.treasure.source.user;
+package com.example.treasure.source.event.com.unimib.worldnews.source.user;
 
 
-import static com.example.treasure.util.Constants.*;
+import static com.unimib.worldnews.util.Constants.*;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.treasure.model.Event;
-import com.example.treasure.model.Feeling;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.example.treasure.model.User;
-import com.example.treasure.util.SharedPreferencesUtils;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.unimib.worldnews.model.Article;
+import com.unimib.worldnews.model.User;
+import com.unimib.worldnews.util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -77,9 +76,9 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
-    public void getUserEvents(String idToken) {
+    public void getUserFavoriteNews(String idToken) {
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_EVENT_COLLECTION).get().addOnCompleteListener(task -> {
+                child(FIREBASE_FAVORITE_NEWS_COLLECTION).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "Error getting data", task.getException());
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
@@ -87,65 +86,68 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
                     else {
                         Log.d(TAG, "Successful read: " + task.getResult().getValue());
 
-                        List<Event> eventsList = new ArrayList<>();
+                        List<Article> articlesList = new ArrayList<>();
                         for(DataSnapshot ds : task.getResult().getChildren()) {
-                            Event event = ds.getValue(Event.class);
-                            eventsList.add(event);
+                            Article article = ds.getValue(Article.class);
+                            articlesList.add(article);
                         }
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(eventsList);
+                        userResponseCallback.onSuccessFromRemoteDatabase(articlesList);
                     }
                 });
     }
 
     @Override
-    public void getUserFeelings(String idToken) {
+    public void getUserPreferences(String idToken) {
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FEELING_COLLECTION).get().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG, "Error getting data", task.getException());
-                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                    }
-                    else {
-                        Log.d(TAG, "Successful read: " + task.getResult().getValue());
+                child(SHARED_PREFERENCES_COUNTRY_OF_INTEREST).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String countryOfInterest = task.getResult().getValue(String.class);
+                        sharedPreferencesUtil.writeStringData(
+                                SHARED_PREFERENCES_FILENAME,
+                                SHARED_PREFERENCES_COUNTRY_OF_INTEREST,
+                                countryOfInterest);
 
-                        List<Feeling> feelingsList = new ArrayList<>();
-                        for(DataSnapshot ds : task.getResult().getChildren()) {
-                            Feeling feeling = ds.getValue(Feeling.class);
-                            feelingsList.add(feeling);
-                        }
+                        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                                child(SHARED_PREFERENCES_CATEGORIES_OF_INTEREST).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            List<String> favoriteTopics = new ArrayList<>();
+                                            for(DataSnapshot ds : task.getResult().getChildren()) {
+                                                String favoriteTopic = ds.getValue(String.class);
+                                                favoriteTopics.add(favoriteTopic);
+                                            }
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(feelingsList);
+                                            if (favoriteTopics.size() > 0) {
+                                                Set<String> favoriteNewsSet = new HashSet<>(favoriteTopics);
+                                                favoriteNewsSet.addAll(favoriteTopics);
+
+                                                sharedPreferencesUtil.writeStringSetData(
+                                                        SHARED_PREFERENCES_FILENAME,
+                                                        SHARED_PREFERENCES_CATEGORIES_OF_INTEREST,
+                                                        favoriteNewsSet);
+                                            }
+                                            userResponseCallback.onSuccessFromGettingUserPreferences();
+                                        }
+                                    }
+                                });
                     }
                 });
     }
 
     @Override
-    public void saveUserEvent(String title, String date, String time, String idToken) {
-
-        Map<String, Object> eventValues = new HashMap<>();
-        eventValues.put("title", title);
-        eventValues.put("date", date);
-        eventValues.put("time", time);
+    public void saveUserPreferences(String favoriteCountry, Set<String> favoriteTopics, String idToken) {
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_EVENT_COLLECTION).setValue(eventValues);
-
-    }
-
-    @Override
-    public void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken) {
-
-        Map<String, Object> feelingValues = new HashMap<>();
-        feelingValues.put("face", face);
-        feelingValues.put("title", text);
-        feelingValues.put("date", date);
-        feelingValues.put("time", time);
-        feelingValues.put("condition", condition);
+                child(SHARED_PREFERENCES_COUNTRY_OF_INTEREST).setValue(favoriteCountry);
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FEELING_COLLECTION).setValue(feelingValues);
-
+                child(SHARED_PREFERENCES_CATEGORIES_OF_INTEREST).setValue(new ArrayList<>(favoriteTopics)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i(TAG, "fattoooo");
+                    }
+                });
     }
-
 }

@@ -24,7 +24,7 @@ public class WeatherMockDataSource extends BaseWeatherRemoteDataSource {
         Weather weatherApiResponse = null;
 
         try {
-            weatherApiResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
+            weatherApiResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_WEATHER_API);
         } catch (IOException e) {
             e.printStackTrace();
         }

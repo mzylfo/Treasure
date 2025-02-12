@@ -5,8 +5,13 @@ import android.app.Application;
 import com.example.treasure.R;
 import com.example.treasure.database.WeatherRoomDatabase;
 import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.repository.user.UserRepository;
 import com.example.treasure.repository.weather.WeatherRepository;
 import com.example.treasure.service.WeatherApiService;
+import com.example.treasure.source.user.BaseUserAuthenticationRemoteDataSource;
+import com.example.treasure.source.user.BaseUserDataRemoteDataSource;
+import com.example.treasure.source.user.UserAuthenticationFirebaseDataSource;
+import com.example.treasure.source.user.UserFirebaseDataSource;
 import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
 import com.example.treasure.source.weather.BaseWeatherRemoteDataSource;
 import com.example.treasure.source.weather.WeatherLocalDataSource;
@@ -97,8 +102,8 @@ public class ServiceLocator {
         BaseUserDataRemoteDataSource userDataRemoteDataSource =
                 new UserFirebaseDataSource(sharedPreferencesUtil);
 
-        BaseArticleLocalDataSource newsLocalDataSource =
-                new ArticleLocalDataSource(getNewsDao(application), sharedPreferencesUtil);
+        BaseWeatherLocalDataSource newsLocalDataSource =
+                new WeatherLocalDataSource(getWeatherDao(application), sharedPreferencesUtil);
 
         return new UserRepository(userRemoteAuthenticationDataSource,
                 userDataRemoteDataSource, newsLocalDataSource);

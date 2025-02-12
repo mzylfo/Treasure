@@ -1,11 +1,9 @@
-
-package com.example.treasure.model;
+package com.example.treasure.source.event.com.unimib.worldnews.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
-
 
 public class User implements Parcelable {
     private String name;
