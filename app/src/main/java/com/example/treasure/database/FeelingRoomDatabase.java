@@ -16,6 +16,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.treasure.model.Date;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Main access point for the underlying connection to the local database.
  * <a href="https://developer.android.com/reference/kotlin/androidx/room/Database">...</a>
@@ -26,6 +29,9 @@ public abstract class FeelingRoomDatabase extends RoomDatabase {
     public abstract FeelingDAO feelingDAO();
 
     private static volatile FeelingRoomDatabase INSTANCE;
+
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public static FeelingRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

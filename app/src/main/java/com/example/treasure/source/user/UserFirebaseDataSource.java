@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,13 +69,13 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
                             });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 userResponseCallback.onFailureFromRemoteDatabase(error.getMessage());
             }
         });
     }
+
 
     @Override
     public void getUserEvents(String idToken) {
@@ -93,9 +94,11 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
                             eventsList.add(event);
                         }
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(eventsList);
+                        userResponseCallback.onSuccessEventsFromRemoteDatabase(eventsList);
                     }
+
                 });
+
     }
 
     @Override
@@ -115,7 +118,7 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
                             feelingsList.add(feeling);
                         }
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(feelingsList);
+                        userResponseCallback.onSuccessFeelingsFromRemoteDatabase(feelingsList);
                     }
                 });
     }

@@ -46,7 +46,7 @@ public class WeatherRepository implements WeatherResponseCallback {
 
     @Override
     public void onSuccessFromRemote(Weather weather, long lastUpdate) {
-        weatherMutableLiveData.postValue(new Result.Success(weather));
+        weatherMutableLiveData.postValue(new Result.Weather(weather));
         weatherLocalDataSource.insertWeather(weather);
     }
 
@@ -57,7 +57,7 @@ public class WeatherRepository implements WeatherResponseCallback {
 
     @Override
     public void onSuccessFromLocal(Weather weather) {
-        weatherMutableLiveData.postValue(new Result.Success(weather));
+            weatherMutableLiveData.postValue(new Result.Weather(weather));
     }
 
     @Override

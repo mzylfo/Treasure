@@ -14,7 +14,7 @@ public class Feeling {
     private String time; //ora dell'inserimento
     private String condition; //informazioni sul meteo per le statistiche
 
-    public Feeling(String text, int face, String date, String time, String condition) {
+    public Feeling(int face, String text, String date, String time, String condition) {
         this.text = text;
         this.face = face;
         this.date = date;

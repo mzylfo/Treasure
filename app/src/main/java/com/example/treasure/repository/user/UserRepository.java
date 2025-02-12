@@ -8,7 +8,11 @@ import com.example.treasure.model.Feeling;
 import com.example.treasure.model.Weather;
 import com.example.treasure.model.Result;
 import com.example.treasure.model.User;
+import com.example.treasure.repository.event.EventResponseCallback;
+import com.example.treasure.repository.feeling.FeelingResponseCallback;
 import com.example.treasure.repository.weather.WeatherResponseCallback;
+import com.example.treasure.source.event.BaseEventLocalDataSource;
+import com.example.treasure.source.feeling.BaseFeelingLocalDataSource;
 import com.example.treasure.source.user.BaseUserAuthenticationRemoteDataSource;
 import com.example.treasure.source.user.BaseUserDataRemoteDataSource;
 import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
@@ -19,12 +23,15 @@ import java.util.List;
 /**
  * Repository class to get the user information.
  */
-public class UserRepository implements IUserRepository, UserResponseCallback, WeatherResponseCallback {
+public class UserRepository implements IUserRepository, UserResponseCallback, WeatherResponseCallback, EventResponseCallback, FeelingResponseCallback {
 
     private static final String TAG = UserRepository.class.getSimpleName();
 
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
+    private final BaseEventLocalDataSource eventLocalDataSource;
+    private final BaseFeelingLocalDataSource feelingLocalDataSource;
+
     private final BaseWeatherLocalDataSource weatherLocalDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
     private final MutableLiveData<Result> userEventsMutableLiveData;
@@ -32,16 +39,22 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource,
-                          BaseWeatherLocalDataSource weatherLocalDataSource) {
+                          BaseWeatherLocalDataSource weatherLocalDataSource,
+                          BaseEventLocalDataSource eventLocalDataSource,
+                          BaseFeelingLocalDataSource feelingLocalDataSource) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
         this.weatherLocalDataSource = weatherLocalDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
         this.userEventsMutableLiveData = new MutableLiveData<>();
         this.userFeelingsMutableLiveData = new MutableLiveData<>();
+        this.eventLocalDataSource = eventLocalDataSource;
+        this.feelingLocalDataSource = feelingLocalDataSource;
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
         this.weatherLocalDataSource.setWeatherResponseCallback(this);
+        this.eventLocalDataSource.setEventCallback(this);
+        this.feelingLocalDataSource.setFeelingCallback(this);
     }
 
     @Override
@@ -130,7 +143,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     @Override
     public void onSuccessFromRemoteDatabase(List<Event> eventList, List<Feeling> feelingList) {
         eventLocalDataSource.insertEvents(eventList);
-        feelingLocalDataSource.insertFeeings(feelingList);
+        feelingLocalDataSource.insertFeelings(feelingList);
     }
 
     /*@Override
@@ -160,12 +173,42 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
+    public void onSuccessFromLocal(List<Feeling> feelingList) {
+
+    }
+
+    @Override
+    public void onSuccessFromLocal(List<Event> eventList) {
+
+    }
+
+    @Override
     public void onSuccessFromLocal(Weather weather) {
 
     }
 
     @Override
     public void onFailureFromLocal(Exception exception) {
+
+    }
+
+    @Override
+    public void onDeleteFeeling(Feeling f) {
+
+    }
+
+    @Override
+    public void onInsertFeeling(Feeling f) {
+
+    }
+
+    @Override
+    public void onDeleteEvent(Event e) {
+
+    }
+
+    @Override
+    public void onInsertEvent(Event e) {
 
     }
 

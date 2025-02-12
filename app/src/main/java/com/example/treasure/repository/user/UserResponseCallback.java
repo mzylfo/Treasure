@@ -11,7 +11,8 @@ public interface UserResponseCallback {
     void onSuccessFromAuthentication(User user);
     void onFailureFromAuthentication(String message);
     void onSuccessFromRemoteDatabase(User user);
-    void onSuccessFromRemoteDatabase(List<Event> eventsList, List<Feeling> feelingsList);
+    void onSuccessEventsFromRemoteDatabase(List<Event> eventsList);
+    void onSuccessFeelingsFromRemoteDatabase(List<Feeling> feelingList);
     //void onSuccessFromGettingUserPreferences();
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();

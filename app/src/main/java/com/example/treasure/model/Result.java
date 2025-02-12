@@ -12,31 +12,32 @@ public abstract class Result {
      * with a Web Service or a local database.
      */
     public static final class Weather extends Result {
-        private final Weather weatherResponse;
-        public Weather(Weather weatherResponse) {
-            this.weatherResponse = weatherResponse;
+        private final com.example.treasure.model.Weather weatherData;
+        public Weather(com.example.treasure.model.Weather weatherData) {
+            this.weatherData = weatherData;
         }
-        public Weather getData() {
-            return weatherResponse;
+
+        public com.example.treasure.model.Weather getData() {
+            return weatherData;
         }
     }
 
     public static final class Event extends Result {
-        private final Event eventResponse;
-        public Event(Event eventResponse) {
+        private final com.example.treasure.model.Event eventResponse;
+        public Event(com.example.treasure.model.Event eventResponse) {
             this.eventResponse = eventResponse;
         }
-        public Event getData() {
+        public com.example.treasure.model.Event getData() {
             return eventResponse;
         }
     }
 
     public static final class Feeling extends Result {
-        private final Feeling feelingResponse;
-        public Feeling(Feeling feelingResponse) {
+        private final com.example.treasure.model.Feeling feelingResponse;
+        public Feeling(com.example.treasure.model.Feeling feelingResponse) {
             this.feelingResponse = feelingResponse;
         }
-        public Feeling getData() {
+        public com.example.treasure.model.Feeling getData() {
             return feelingResponse;
         }
     }
@@ -50,6 +51,8 @@ public abstract class Result {
             return user;
         }
     }
+
+
 
     /**
      * Class that represents an error occurred during the interaction

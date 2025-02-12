@@ -36,4 +36,8 @@ public interface FeelingDAO {
     // Nuova funzione per inserire un singolo evento
     @Insert
     void insert(Feeling feeling);
+
+    // Funzione per eliminare tutte le entry
+    @Query("DELETE FROM Feeling")
+    void deleteAll();
 }

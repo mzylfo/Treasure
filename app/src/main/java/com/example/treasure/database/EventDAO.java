@@ -32,6 +32,10 @@ public interface EventDAO {
     @Query("DELETE FROM Event WHERE id = :eventId")
     void deleteById(int eventId);
 
+    // Funzione per eliminare tutte le entry
+    @Query("DELETE FROM Event")
+    void deleteAll();
+
     // Nuova funzione per inserire un singolo evento
     @Insert
     void insert(Event event);
