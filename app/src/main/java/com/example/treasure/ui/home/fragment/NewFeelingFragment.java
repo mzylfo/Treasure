@@ -75,7 +75,7 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
             String entryText = feelingEntryEditText.getText().toString();
             String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
-            Feeling newFeeling = new Feeling(entryText, entryFace, date, time, condition);
+            Feeling newFeeling = new Feeling(entryFace, entryText, date, time, condition);
             // Ottieni l'istanza del database
             FeelingRoomDatabase db = FeelingRoomDatabase.getDatabase(getContext());
 

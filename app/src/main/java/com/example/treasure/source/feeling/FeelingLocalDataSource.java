@@ -36,7 +36,7 @@ public class FeelingLocalDataSource extends BaseFeelingLocalDataSource {
     @Override
     public void getFeelings() {
         FeelingRoomDatabase.databaseWriteExecutor.execute(() -> {
-            feelingCallback.onSuccessFromLocal(feelingDAO.getAll());
+            feelingCallback.onSuccessFeelingFromLocal(feelingDAO.getAll());
         });
     }
 
@@ -50,7 +50,7 @@ public class FeelingLocalDataSource extends BaseFeelingLocalDataSource {
             if (eList.size() != (feelingDAO.getAll().size())) {
                 feelingCallback.onDeleteFeeling(feeling);
             } else {
-                feelingCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                feelingCallback.onFailureFeelingFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
     }
@@ -67,7 +67,7 @@ public class FeelingLocalDataSource extends BaseFeelingLocalDataSource {
             if (eList.size() != (feelingDAO.getAll().size())) {
                 feelingCallback.onInsertFeeling(e);
             } else {
-                feelingCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                feelingCallback.onFailureFeelingFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
 

@@ -120,7 +120,7 @@ public class HomeDailyFragment extends Fragment {
         weatherViewModel.getWeather("Milan", "no", Long.parseLong(lastUpdate)).observe(getViewLifecycleOwner(),
                 result -> {
                     if (result.isSuccess()) {
-                        weather = (((Result.Success) result).getData());
+                        weather = (((Result.Weather) result).getData());
                         Log.d(TAG, "Weather data: " + weather.toString()); // Aggiungi questo log
                         if (weather != null) {
                             String apiResponse = weather.toString();

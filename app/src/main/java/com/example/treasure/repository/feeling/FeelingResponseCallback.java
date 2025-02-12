@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface FeelingResponseCallback {
     void onFailureFromRemote(Exception exception);
-    void onSuccessFromLocal(List<Feeling> feelingList);
-    void onFailureFromLocal(Exception exception);
+    void onSuccessFeelingFromLocal(List<Feeling> feelingList);
+    void onFailureFeelingFromLocal(Exception exception);
     void onDeleteFeeling(Feeling f);
     void onInsertFeeling(Feeling f);
 }

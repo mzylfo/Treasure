@@ -141,9 +141,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
-    public void onSuccessFromRemoteDatabase(List<Event> eventList, List<Feeling> feelingList) {
-        eventLocalDataSource.insertEvents(eventList);
-        feelingLocalDataSource.insertFeelings(feelingList);
+    public void onSuccessEventsFromRemoteDatabase(List<Event> eventsList) {
+
+    }
+
+    @Override
+    public void onSuccessFeelingsFromRemoteDatabase(List<Feeling> feelingList) {
+
     }
 
     /*@Override
@@ -173,12 +177,22 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
-    public void onSuccessFromLocal(List<Feeling> feelingList) {
+    public void onSuccessFeelingFromLocal(List<Feeling> feelingList) {
 
     }
 
     @Override
-    public void onSuccessFromLocal(List<Event> eventList) {
+    public void onFailureFeelingFromLocal(Exception exception) {
+
+    }
+
+    @Override
+    public void onSuccessEventFromLocal(List<Event> eventList) {
+
+    }
+
+    @Override
+    public void onFailureEventFromLocal(Exception exception) {
 
     }
 

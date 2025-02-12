@@ -3,11 +3,17 @@ package com.example.treasure.util;
 import android.app.Application;
 
 import com.example.treasure.R;
+import com.example.treasure.database.EventRoomDatabase;
+import com.example.treasure.database.FeelingRoomDatabase;
 import com.example.treasure.database.WeatherRoomDatabase;
 import com.example.treasure.repository.user.IUserRepository;
 import com.example.treasure.repository.user.UserRepository;
 import com.example.treasure.repository.weather.WeatherRepository;
 import com.example.treasure.service.WeatherApiService;
+import com.example.treasure.source.event.BaseEventLocalDataSource;
+import com.example.treasure.source.event.EventLocalDataSource;
+import com.example.treasure.source.feeling.BaseFeelingLocalDataSource;
+import com.example.treasure.source.feeling.FeelingLocalDataSource;
 import com.example.treasure.source.user.BaseUserAuthenticationRemoteDataSource;
 import com.example.treasure.source.user.BaseUserDataRemoteDataSource;
 import com.example.treasure.source.user.UserAuthenticationFirebaseDataSource;
@@ -68,6 +74,16 @@ public class ServiceLocator {
         return WeatherRoomDatabase.getDatabase(application);
     }
 
+
+    public EventRoomDatabase getEventDao(Application application) {
+        return EventRoomDatabase.getDatabase(application);
+    }
+
+
+    public FeelingRoomDatabase getFeelingDao(Application application) {
+        return FeelingRoomDatabase.getDatabase(application);
+    }
+
     /**
      * Returns an instance of WeatherRepositoryWithLiveData.
      * @param application Param for accessing the global application state.
@@ -102,10 +118,16 @@ public class ServiceLocator {
         BaseUserDataRemoteDataSource userDataRemoteDataSource =
                 new UserFirebaseDataSource(sharedPreferencesUtil);
 
-        BaseWeatherLocalDataSource newsLocalDataSource =
+        BaseWeatherLocalDataSource weatherLocalDataSource =
                 new WeatherLocalDataSource(getWeatherDao(application), sharedPreferencesUtil);
 
+        BaseEventLocalDataSource eventLocalDataSource =
+                new EventLocalDataSource(getEventDao(application), sharedPreferencesUtil);
+
+        BaseFeelingLocalDataSource feelingLocalDataSource =
+                new FeelingLocalDataSource(getFeelingDao(application), sharedPreferencesUtil);
+
         return new UserRepository(userRemoteAuthenticationDataSource,
-                userDataRemoteDataSource, newsLocalDataSource);
+                userDataRemoteDataSource, weatherLocalDataSource, eventLocalDataSource, feelingLocalDataSource);
     }
 }

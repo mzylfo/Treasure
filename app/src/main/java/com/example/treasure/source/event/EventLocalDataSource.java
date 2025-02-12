@@ -37,7 +37,7 @@ public class EventLocalDataSource extends BaseEventLocalDataSource {
     @Override
     public void getEvents() {
         EventRoomDatabase.databaseWriteExecutor.execute(() -> {
-            eventCallback.onSuccessFromLocal(eventDAO.getAll());
+            eventCallback.onSuccessEventFromLocal(eventDAO.getAll());
         });
     }
 
@@ -51,7 +51,7 @@ public class EventLocalDataSource extends BaseEventLocalDataSource {
             if (eList.size() != (eventDAO.getAll().size())){
                 eventCallback.onDeleteEvent(event);
             } else {
-                eventCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                eventCallback.onFailureEventFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
     }
@@ -67,7 +67,7 @@ public class EventLocalDataSource extends BaseEventLocalDataSource {
             if (eList.size() != (eventDAO.getAll().size())){
                 eventCallback.onInsertEvent(e);
             } else {
-                eventCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                eventCallback.onFailureEventFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
 
@@ -87,7 +87,7 @@ public class EventLocalDataSource extends BaseEventLocalDataSource {
             }
         });
 
-        eventCallback.onSuccessFromLocal(eventList);
+        eventCallback.onSuccessEventFromLocal(eventList);
     }
 }
 
