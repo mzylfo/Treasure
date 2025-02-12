@@ -1,4 +1,4 @@
-package com.example.treasure.source;
+package com.example.treasure.source.weather;
 
 import static com.example.treasure.util.Constants.UNEXPECTED_ERROR;
 

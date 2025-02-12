@@ -11,23 +11,42 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static com.example.treasure.util.Constants.USER_COLLISION_ERROR;
+import static com.example.treasure.util.Constants.WEAK_PASSWORD_ERROR;
+
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.treasure.R;
+import com.example.treasure.model.Result;
+import com.example.treasure.model.User;
+import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
+import com.example.treasure.util.Constants;
+import com.example.treasure.util.ServiceLocator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.util.concurrent.Executor;
 
 
 public class SignupFragment extends Fragment {
+
+    private UserViewModel userViewModel;
+    private TextInputEditText textInputEmail, textInputPassword;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -41,50 +60,90 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+
+        userViewModel = new ViewModelProvider(requireActivity(), new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup, container, false);
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        textInputEmail = view.findViewById(R.id.textInputNewEmail);
+        textInputPassword = view.findViewById(R.id.textInputNewPassword);
+
+        view.findViewById(R.id.signUpButton).setOnClickListener(v -> {
+            String email = textInputEmail.getText().toString().trim();
+            String password = textInputPassword.getText().toString().trim();
+
+            if (isEmailOk(email) & isPasswordOk(password)) {
+                //binding.progressBar.setVisibility(View.VISIBLE);
+                if (!userViewModel.isAuthenticationError()) {
+                    userViewModel.getUserMutableLiveData(email, password, false).observe(
+                            getViewLifecycleOwner(), result -> {
+                                if (result.isSuccess()) {
+                                    User user = (Result.UserSuccess) result).getData();
+                                    //saveLoginData(email, password, user.getIdToken());
+                                    userViewModel.setAuthenticationError(false);
+                                    Navigation.findNavController(view).navigate(
+                                            R.id.action_signupFragment_to_pickCountryFragment);
+                                } else {
+                                    userViewModel.setAuthenticationError(true);
+                                    Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                                            getErrorMessage(((Result.Error) result).getMessage()),
+                                            Snackbar.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    userViewModel.getUser(email, password, false);
+                }
+                //binding.progressBar.setVisibility(View.GONE);
+            } else {
+                userViewModel.setAuthenticationError(true);
+                Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                        R.string.error_email_login, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        EditText emailInserted = view.findViewById(R.id.textInputNewEmail);
-        EditText passwordInserted = view.findViewById(R.id.textInputNewPassword);
-        EditText nameInserted = view.findViewById(R.id.textInputNewUser);
-
-        Button signButton = view.findViewById(R.id.signUpButton);
         Button backLogin = view.findViewById(R.id.backLoginButton);
-
-        signButton.setOnClickListener(v ->{
-
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
-
-            mAuth.createUserWithEmailAndPassword(emailInserted.getText().toString(), passwordInserted.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                //updateUI(user);
-                            } else {
-                                // If sign in fails, display a message to the user.
-
-                            }
-                        }
-                    });
-        });
 
         backLogin.setOnClickListener(v3 -> {
             Navigation.findNavController(v3).navigate(R.id.action_signupFragment_to_loginFragment);
         });
+    }
+
+    private boolean isEmailOk(String email) {
+        // Check if the email is valid through the use of this library:
+        // https://commons.apache.org/proper/commons-validator/
+        if (!EmailValidator.getInstance().isValid((email))) {
+            textInputEmail.setError(getString(R.string.error_email_login));
+            return false;
+        } else {
+            textInputEmail.setError(null);
+            return true;
+        }
+    }
+
+    private boolean isPasswordOk(String password) {
+        // Check if the password length is correct
+        if (password.isEmpty() || password.length() < Constants.MINIMUM_LENGTH_PASSWORD) {
+            textInputPassword.setError(getString(R.string.error_password_login));
+            return false;
+        } else {
+            textInputPassword.setError(null);
+            return true;
+        }
     }
 }

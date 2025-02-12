@@ -1,4 +1,4 @@
-package com.example.treasure.source;
+package com.example.treasure.source.weather;
 
 import com.example.treasure.repository.weather.WeatherResponseCallback;
 

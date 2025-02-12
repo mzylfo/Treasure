@@ -47,4 +47,15 @@
     <string name="relax_no_events_for_now">Relax... no events (for now!)</string>
     <string name="weather_information">Weather information</string>
     <string name="weather_api_key">a521e7464e78415e85d182732250802</string>
+
+    <!-- ERRORS -->
+    <!-- Errors -->
+    <string name="error_email_login">Check the email address</string>
+    <string name="error_password_login">The password must have at least 8 characters</string>
+    <string name="error_retrieving_events">There was an error retrieving the events</string>
+    <string name="error_retrieving_feelings">There was an error retrieving the feelings</string>
+    <string name="error_retrieving_weather">There was an error retrieving the weather</string>
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_collision_user">This email is already registered</string>
+    <string name="error_unexpected">Unexpected error</string>
 </resources>

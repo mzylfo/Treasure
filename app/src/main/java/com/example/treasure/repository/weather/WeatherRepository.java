@@ -5,8 +5,8 @@ import static com.example.treasure.util.Constants.FRESH_TIMEOUT;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.treasure.model.Weather;
-import com.example.treasure.source.BaseWeatherLocalDataSource;
-import com.example.treasure.source.BaseWeatherRemoteDataSource;
+import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
+import com.example.treasure.source.weather.BaseWeatherRemoteDataSource;
 import com.example.treasure.model.Result;
 
 /**

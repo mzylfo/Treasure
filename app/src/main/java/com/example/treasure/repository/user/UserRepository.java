@@ -3,42 +3,43 @@ package com.example.treasure.repository.user;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.model.Event;
+import com.example.treasure.model.Feeling;
 import com.example.treasure.model.Weather;
 import com.example.treasure.model.Result;
 import com.example.treasure.model.User;
 import com.example.treasure.repository.weather.WeatherResponseCallback;
+import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
 
 import java.util.List;
-import java.util.Set;
 
 
 /**
  * Repository class to get the user information.
  */
-/*public class UserRepository implements IUserRepository, UserResponseCallback, WeatherResponseCallback {
+public class UserRepository implements IUserRepository, UserResponseCallback, WeatherResponseCallback {
 
     private static final String TAG = UserRepository.class.getSimpleName();
 
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
-    private final BaseArticleLocalDataSource articleLocalDataSource;
+    private final BaseWeatherLocalDataSource weatherLocalDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
-    private final MutableLiveData<Result> userFavoriteNewsMutableLiveData;
-    private final MutableLiveData<Result> userPreferencesMutableLiveData;
+    private final MutableLiveData<Result> userEventsMutableLiveData;
+    private final MutableLiveData<Result> userFeelingsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource,
-                          BaseArticleLocalDataSource newsLocalDataSource) {
+                          BaseWeatherLocalDataSource weatherLocalDataSource) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
-        this.articleLocalDataSource = newsLocalDataSource;
+        this.weatherLocalDataSource = weatherLocalDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
-        this.userPreferencesMutableLiveData = new MutableLiveData<>();
-        this.userFavoriteNewsMutableLiveData = new MutableLiveData<>();
+        this.userEventsMutableLiveData = new MutableLiveData<>();
+        this.userFeelingsMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
-        this.articleLocalDataSource.setArticleCallback(this);
+        this.weatherLocalDataSource.setWeatherResponseCallback(this);
     }
 
     @Override
@@ -58,15 +59,15 @@ import java.util.Set;
     }
 
     @Override
-    public MutableLiveData<Result> getUserFavoriteNews(String idToken) {
-        userDataRemoteDataSource.getUserFavoriteNews(idToken);
-        return userFavoriteNewsMutableLiveData;
+    public MutableLiveData<Result> getUserEvents(String idToken) {
+        userDataRemoteDataSource.getUserEvents(idToken);
+        return userEventsMutableLiveData;
     }
 
     @Override
-    public MutableLiveData<Result> getUserPreferences(String idToken) {
-        userDataRemoteDataSource.getUserPreferences(idToken);
-        return userPreferencesMutableLiveData;
+    public MutableLiveData<Result> getUserFeelings(String idToken) {
+        userDataRemoteDataSource.getUserFeelings(idToken);
+        return userFeelingsMutableLiveData;
     }
 
     @Override
@@ -96,8 +97,13 @@ import java.util.Set;
     }
 
     @Override
-    public void saveUserPreferences(String favoriteCountry, Set<String> favoriteTopics, String idToken) {
-        userDataRemoteDataSource.saveUserPreferences(favoriteCountry, favoriteTopics, idToken);
+    public void saveUserEvent(String title, String date, String time, String idToken) {
+        userDataRemoteDataSource.saveUserEvent(title, date, time, idToken);
+    }
+
+    @Override
+    public void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken) {
+        userDataRemoteDataSource.saveUserFeeling(face, text, date, time, condition, idToken);
     }
 
     @Override
@@ -120,14 +126,15 @@ import java.util.Set;
     }
 
     @Override
-    public void onSuccessFromRemoteDatabase(List<Article> articleList) {
-        articleLocalDataSource.insertArticles(articleList);
+    public void onSuccessFromRemoteDatabase(List<Event> eventList, List<Feeling> feelingList) {
+        eventLocalDataSource.insertEvents(eventList);
+        feelingLocalDataSource.insertFeeings(feelingList);
     }
 
-    @Override
+    /*@Override
     public void onSuccessFromGettingUserPreferences() {
         userPreferencesMutableLiveData.postValue(new Result.UserSuccess(null));
-    }
+    }*/
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {
@@ -141,7 +148,7 @@ import java.util.Set;
     }
 
     @Override
-    public void onSuccessFromRemote(ArticleAPIResponse articleAPIResponse, long lastUpdate) {
+    public void onSuccessFromRemote(Weather articleAPIResponse, long lastUpdate) {
 
     }
 
@@ -151,7 +158,7 @@ import java.util.Set;
     }
 
     @Override
-    public void onSuccessFromLocal(List<Article> articlesList) {
+    public void onSuccessFromLocal(Weather weather) {
 
     }
 
@@ -161,32 +168,8 @@ import java.util.Set;
     }
 
     @Override
-    public void onNewsFavoriteStatusChanged(Article article, List<Article> favoriteArticles) {
+    public void onWeatherStatusChanged(Weather weather) {
 
     }
 
-    @Override
-    public void onNewsFavoriteStatusChanged(List<Article> news) {
-
-    }
-
-    @Override
-    public void onDeleteFavoriteNewsSuccess(List<Article> favoriteNews) {
-
-    }
-
-    //@Override
-    public void onSuccessFromCloudReading(List<Article> newsList) {
-
-    }
-
-    //@Override
-    public void onSuccessFromCloudWriting(Article article) {
-
-    }
-
-    //@Override
-    public void onFailureFromCloud(Exception exception) {
-
-    }
-}*/
+}

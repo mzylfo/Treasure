@@ -18,6 +18,6 @@ public interface IUserRepository {
     void signUp(String email, String password);
     void signIn(String email, String password);
     void signInWithGoogle(String token);
-    void saveUserEvents(String title, String date, String time, String idToken);
-    void saveUserFeelings(int face, String text, String date, String time, String condition);
+    void saveUserEvent(String title, String date, String time, String idToken);
+    void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken);
 }

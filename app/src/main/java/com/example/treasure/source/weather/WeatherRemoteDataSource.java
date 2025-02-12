@@ -1,4 +1,4 @@
-package com.example.treasure.source;
+package com.example.treasure.source.weather;
 
 import static android.content.ContentValues.TAG;
 import static com.example.treasure.util.Constants.API_KEY_ERROR;

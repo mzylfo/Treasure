@@ -4,13 +4,14 @@ import android.app.Application;
 
 import com.example.treasure.R;
 import com.example.treasure.database.WeatherRoomDatabase;
+import com.example.treasure.repository.user.IUserRepository;
 import com.example.treasure.repository.weather.WeatherRepository;
 import com.example.treasure.service.WeatherApiService;
-import com.example.treasure.source.BaseWeatherLocalDataSource;
-import com.example.treasure.source.BaseWeatherRemoteDataSource;
-import com.example.treasure.source.WeatherLocalDataSource;
-import com.example.treasure.source.WeatherMockDataSource;
-import com.example.treasure.source.WeatherRemoteDataSource;
+import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
+import com.example.treasure.source.weather.BaseWeatherRemoteDataSource;
+import com.example.treasure.source.weather.WeatherLocalDataSource;
+import com.example.treasure.source.weather.WeatherMockDataSource;
+import com.example.treasure.source.weather.WeatherRemoteDataSource;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,12 +53,9 @@ public class ServiceLocator {
         return retrofit.create(WeatherApiService.class);
     }
 
-    public WeatherRoomDatabase getWeatherDB(Application application) {
-        return WeatherRoomDatabase.getDatabase(application);
-    }
 
     /**
-     * Returns an instance of NewsRoomDatabase class to manage Room database.
+     * Returns an instance of WeatherRoomDatabase class to manage Room database.
      * @param application Param for accessing the global application state.
      * @return An instance of NewsRoomDatabase.
      */
@@ -66,7 +64,7 @@ public class ServiceLocator {
     }
 
     /**
-     * Returns an instance of INewsRepositoryWithLiveData.
+     * Returns an instance of WeatherRepositoryWithLiveData.
      * @param application Param for accessing the global application state.
      * @param debugMode Param to establish if the application is run in debug mode.
      * @return An instance of INewsRepositoryWithLiveData.
@@ -88,5 +86,21 @@ public class ServiceLocator {
         newsLocalDataSource = new WeatherLocalDataSource(getWeatherDao(application), sharedPreferencesUtil);
 
         return new WeatherRepository(newsRemoteDataSource, newsLocalDataSource);
+    }
+
+    public IUserRepository getUserRepository(Application application) {
+        SharedPreferencesUtils sharedPreferencesUtil = new SharedPreferencesUtils(application);
+
+        BaseUserAuthenticationRemoteDataSource userRemoteAuthenticationDataSource =
+                new UserAuthenticationFirebaseDataSource();
+
+        BaseUserDataRemoteDataSource userDataRemoteDataSource =
+                new UserFirebaseDataSource(sharedPreferencesUtil);
+
+        BaseArticleLocalDataSource newsLocalDataSource =
+                new ArticleLocalDataSource(getNewsDao(application), sharedPreferencesUtil);
+
+        return new UserRepository(userRemoteAuthenticationDataSource,
+                userDataRemoteDataSource, newsLocalDataSource);
     }
 }

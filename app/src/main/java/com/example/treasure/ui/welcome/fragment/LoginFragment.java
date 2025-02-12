@@ -1,6 +1,7 @@
 package com.example.treasure.ui.welcome.fragment;
 
 import static com.example.treasure.ui.home.fragment.HomeDailyFragment.TAG;
+import static com.example.treasure.util.Constants.SHARED_PREFERENCES_FILENAME;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,17 +18,30 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import static com.example.treasure.util.Constants.INVALID_CREDENTIALS_ERROR;
+import static com.example.treasure.util.Constants.INVALID_USER_ERROR;
+
 import com.example.treasure.R;
+import com.example.treasure.model.Result;
 import com.example.treasure.model.User;
+import com.example.treasure.repository.user.IUserRepository;
 import com.example.treasure.ui.home.HomeActivity;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
+import com.example.treasure.util.ServiceLocator;
+import com.example.treasure.util.SharedPreferencesUtils;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -50,44 +64,24 @@ public class LoginFragment extends Fragment {
     private BeginSignInRequest signInRequest;
     private ActivityResultLauncher<IntentSenderRequest> activityResultLauncher;
     private ActivityResultContracts.StartIntentSenderForResult startIntentSenderForResult;
+    private UserViewModel userViewModel;
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-    public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
-    }
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-
-        super.onViewCreated(view, savedInstanceState);
-
-        editTextEmail = view.findViewById(R.id.textInputEmail);
-        editTextPassword = view.findViewById(R.id.textInputPassword);
-
-        Button loginButton = view.findViewById(R.id.loginButton);
-        Button signUpButton = view.findViewById(R.id.outlinedButton);
-        Button googleButton = view.findViewById(R.id.logInGoogle);
-
-        SignInClient oneTapClient = Identity.getSignInClient(requireActivity());
-        BeginSignInRequest signInRequest = BeginSignInRequest.builder()
+        oneTapClient = Identity.getSignInClient(requireActivity());
+        signInRequest = BeginSignInRequest.builder()
                 .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
                         .setSupported(true)
                         .build())
@@ -135,36 +129,98 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginButton.setOnClickListener(v -> {
-            if (isEmailOk(editTextEmail.getText().toString())){
-                if(isPasswordOk(editTextPassword.getText().toString())){
-                    mAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString())
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "signInWithEmail:success");
-                                        //FirebaseUser user = mAuth.getCurrentUser();
-                                        //updateUI(user);
-                                    } else {
-                                        Snackbar.make(view, "Utente inesistente", Snackbar.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-               else {
-                Snackbar.make(view, "Check your password", Snackbar.LENGTH_SHORT).show();
-            }
-        } else {
-            editTextEmail.setError("Check your email");
-            Snackbar.make(view, "Insert correct email", Snackbar.LENGTH_SHORT).show();
-        }
-    });
+    }
 
-        signUpButton.setOnClickListener(v2 -> {
-            Navigation.findNavController(v2).navigate(R.id.action_loginFragment_to_signupFragment);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        super.onViewCreated(view, savedInstanceState);
+
+        if (userViewModel.getLoggedUser() != null) {
+            goToNextPage(view);
+        }
+
+        editTextEmail = view.findViewById(R.id.textInputEmail);
+        editTextPassword = view.findViewById(R.id.textInputPassword);
+
+        Button loginButton = view.findViewById(R.id.loginButton);
+        Button signUpButton = view.findViewById(R.id.outlinedButton);
+        Button loginGoogleButton = view.findViewById(R.id.logInGoogle);
+
+        loginButton.setOnClickListener(v -> {
+            if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
+                if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
+                    goToNextPage(view);
+                } else {
+                    editTextPassword.setError(getString(R.string.error_password_login));
+                }
+            } else {
+                editTextEmail.setError(getString(R.string.error_email_login));
+            }
         });
+
+        loginGoogleButton.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(requireActivity(), new OnSuccessListener<BeginSignInResult>() {
+                    @Override
+                    public void onSuccess(BeginSignInResult result) {
+                        Log.d(TAG, "onSuccess from oneTapClient.beginSignIn(BeginSignInRequest)");
+                        IntentSenderRequest intentSenderRequest =
+                                new IntentSenderRequest.Builder(result.getPendingIntent()).build();
+                        activityResultLauncher.launch(intentSenderRequest);
+                    }
+                })
+                .addOnFailureListener(requireActivity(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // No saved credentials found. Launch the One Tap sign-up flow, or
+                        // do nothing and continue presenting the signed-out UI.
+                        Log.d(TAG, e.getLocalizedMessage());
+
+                        Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                                requireActivity().getString(R.string.error_unexpected),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                }));
+
+        signUpButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
+        });
+    }
+
+    //DA CAMBIARE!!!!!
+
+    private void retrieveUserInformationAndStartActivity(User user, View view) {
+        //progressIndicator.setVisibility(View.VISIBLE);
+        userViewModel.getUserEvents(user.getIdToken()).observe(
+                getViewLifecycleOwner(), userPreferences -> {
+                    //The viewmodel updated sharedprefs
+                    goToNextPage(view);
+                }
+        );
+    }
+
+    private String getErrorMessage(String errorType) {
+        switch (errorType) {
+            case INVALID_CREDENTIALS_ERROR:
+                return requireActivity().getString(R.string.error_password_login);
+            case INVALID_USER_ERROR:
+                return requireActivity().getString(R.string.error_email_login);
+            default:
+                return requireActivity().getString(R.string.error_unexpected);
+        }
+    }
+
+    private void goToNextPage(View view) {
+        startActivity(new Intent(getContext(), HomeActivity.class));
+
     }
 
     private boolean isEmailOk(String email) {
