@@ -102,12 +102,13 @@ public class LoginFragment extends Fragment {
                         // Got an ID token from Google. Use it to authenticate with Firebase.
                         userViewModel.getGoogleUserMutableLiveData(idToken).observe(getViewLifecycleOwner(), authenticationResult -> {
                             if (authenticationResult.isSuccess()) {
-                                User user = ((Result.UserSuccess) authenticationResult).getData();
+                                User user = ((Result.User) authenticationResult).getUserData();
                                 //saveLoginData(user.getEmail(), null, user.getIdToken());
                                 Log.i(TAG, "Logged as: " + user.getEmail());
                                 userViewModel.setAuthenticationError(false);
                                 retrieveUserInformationAndStartActivity(user, getView());
                             } else {
+                                userViewModel.setAuthenticationError(true);
                                 userViewModel.setAuthenticationError(true);
                                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
                                         getErrorMessage(((Result.Error) authenticationResult).getMessage()),
@@ -115,7 +116,11 @@ public class LoginFragment extends Fragment {
                             }
                         });
                     }
+                    else{
+
+                    }
                 } catch (ApiException e) {
+
                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
                             requireActivity().getString(R.string.error_unexpected),
                             Snackbar.LENGTH_SHORT).show();
@@ -169,6 +174,7 @@ public class LoginFragment extends Fragment {
                         IntentSenderRequest intentSenderRequest =
                                 new IntentSenderRequest.Builder(result.getPendingIntent()).build();
                         activityResultLauncher.launch(intentSenderRequest);
+
                     }
                 })
                 .addOnFailureListener(requireActivity(), new OnFailureListener() {
@@ -192,13 +198,13 @@ public class LoginFragment extends Fragment {
     //DA CAMBIARE!!!!!
 
     private void retrieveUserInformationAndStartActivity(User user, View view) {
+        goToNextPage(view);
         //progressIndicator.setVisibility(View.VISIBLE);
-        userViewModel.getUserEvents(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userPreferences -> {
-                    //The viewmodel updated sharedprefs
+        /*userViewModel.getUserEvents(user.getIdToken()).observe(
+                getViewLifecycleOwner(), userEvents -> {
                     goToNextPage(view);
                 }
-        );
+        );*/
     }
 
     private String getErrorMessage(String errorType) {

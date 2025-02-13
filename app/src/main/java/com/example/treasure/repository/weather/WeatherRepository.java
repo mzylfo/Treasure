@@ -51,8 +51,8 @@ public class WeatherRepository implements WeatherResponseCallback {
     }
 
     @Override
-    public void onFailureFromRemote(Exception exception) {
-        weatherMutableLiveData.postValue(new Result.Error(exception.getMessage()));
+    public void onFailureFromRemote(String exception) {
+        weatherMutableLiveData.postValue(new Result.Error(exception));
     }
 
     @Override
@@ -61,8 +61,8 @@ public class WeatherRepository implements WeatherResponseCallback {
     }
 
     @Override
-    public void onFailureFromLocal(Exception exception) {
-        weatherMutableLiveData.postValue(new Result.Error(exception.getMessage()));
+    public void onFailureFromLocal(String exception) {
+        weatherMutableLiveData.postValue(new Result.Error(exception));
     }
 
     @Override

@@ -32,7 +32,7 @@ public class WeatherMockDataSource extends BaseWeatherRemoteDataSource {
         if (weatherApiResponse != null) {
             weatherCallback.onSuccessFromRemote(weatherApiResponse, System.currentTimeMillis());
         } else {
-            weatherCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+            weatherCallback.onFailureFromRemote(String.valueOf(new Exception(API_KEY_ERROR)));
         }
     }
 }

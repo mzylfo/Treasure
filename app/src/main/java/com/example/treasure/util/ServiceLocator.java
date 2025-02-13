@@ -15,7 +15,7 @@ import com.example.treasure.source.event.EventLocalDataSource;
 import com.example.treasure.source.feeling.BaseFeelingLocalDataSource;
 import com.example.treasure.source.feeling.FeelingLocalDataSource;
 import com.example.treasure.source.user.BaseUserAuthenticationRemoteDataSource;
-import com.example.treasure.source.user.BaseUserDataRemoteDataSource;
+import com.example.treasure.source.user.BaseUserRemoteDataSource;
 import com.example.treasure.source.user.UserAuthenticationFirebaseDataSource;
 import com.example.treasure.source.user.UserFirebaseDataSource;
 import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
@@ -115,7 +115,7 @@ public class ServiceLocator {
         BaseUserAuthenticationRemoteDataSource userRemoteAuthenticationDataSource =
                 new UserAuthenticationFirebaseDataSource();
 
-        BaseUserDataRemoteDataSource userDataRemoteDataSource =
+        BaseUserRemoteDataSource userDataRemoteDataSource =
                 new UserFirebaseDataSource(sharedPreferencesUtil);
 
         BaseWeatherLocalDataSource weatherLocalDataSource =

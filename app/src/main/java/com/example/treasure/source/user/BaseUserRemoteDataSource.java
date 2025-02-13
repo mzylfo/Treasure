@@ -4,9 +4,7 @@ package com.example.treasure.source.user;
 import com.example.treasure.model.User;
 import com.example.treasure.repository.user.UserResponseCallback;
 
-import java.util.Set;
-
-public abstract class BaseUserDataRemoteDataSource {
+public abstract class BaseUserRemoteDataSource {
     protected UserResponseCallback userResponseCallback;
 
     public void setUserResponseCallback(UserResponseCallback userResponseCallback) {

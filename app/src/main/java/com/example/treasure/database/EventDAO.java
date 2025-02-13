@@ -1,14 +1,11 @@
 package com.example.treasure.database;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.treasure.model.Date;
 import com.example.treasure.model.Event;
-import com.example.treasure.model.EventApiResponse;
 
 import java.util.List;
 

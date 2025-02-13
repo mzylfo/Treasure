@@ -36,7 +36,7 @@ public class WeatherLocalDataSource extends BaseWeatherLocalDataSource {
                 Weather weather = weatherList.get(0); // Recupera il primo elemento
                 weatherCallback.onSuccessFromLocal(weather);
             } else {
-                weatherCallback.onFailureFromLocal(new Exception("No weather data found"));
+                weatherCallback.onFailureFromLocal(String.valueOf(new Exception("No weather data found")));
             }
         });
     }
@@ -51,7 +51,7 @@ public class WeatherLocalDataSource extends BaseWeatherLocalDataSource {
                 Weather updatedWeather = weatherDAO.getWeather(weather.getUid());
                 weatherCallback.onWeatherStatusChanged(updatedWeather);
             } else {
-                weatherCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                weatherCallback.onFailureFromLocal(String.valueOf(new Exception(UNEXPECTED_ERROR)));
             }
         });
     }

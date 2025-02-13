@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 
 import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.example.treasure.model.User;
@@ -22,16 +21,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
  * Class that gets the user information using Firebase Realtime Database.
  */
-public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
+public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
 
     private static final String TAG = UserFirebaseDataSource.class.getSimpleName();
 

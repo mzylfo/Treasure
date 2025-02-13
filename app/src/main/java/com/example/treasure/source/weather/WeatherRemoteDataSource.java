@@ -41,14 +41,14 @@ public class WeatherRemoteDataSource extends BaseWeatherRemoteDataSource {
                     weatherCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
                 } else {
                     Log.e(TAG, "API Response is null or unsuccessful");
-                    weatherCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+                    weatherCallback.onFailureFromRemote(String.valueOf(new Exception(API_KEY_ERROR)));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
                 Log.e(TAG, "API Call failed: " + t.getMessage());
-                weatherCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
+                weatherCallback.onFailureFromRemote(String.valueOf(new Exception(RETROFIT_ERROR)));
             }
         });
     }

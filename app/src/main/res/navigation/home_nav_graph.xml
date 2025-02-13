@@ -18,10 +18,15 @@
         android:id="@+id/profileSettingsFragment"
         android:name="com.example.treasure.ui.home.fragment.ProfileSettingsFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile_settings" />
+        tools:layout="@layout/fragment_profile_settings">
+            <action
+        android:id="@+id/action_home_to_login"
+        app:destination="@id/loginFragment" /> </fragment>
     <fragment
         android:id="@+id/dailyHomeFragment"
         android:name="com.example.treasure.ui.home.fragment.HomeDailyFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home_daily" />
+        tools:layout="@layout/fragment_home_daily"/>
+
+    
 </navigation>

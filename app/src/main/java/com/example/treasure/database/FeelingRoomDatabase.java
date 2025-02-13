@@ -1,7 +1,5 @@
 package com.example.treasure.database;
 
-import static com.example.treasure.util.Constants.DATABASE_VERSION;
-
 import android.content.Context;
 
 import com.example.treasure.model.Feeling;
@@ -13,8 +11,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import com.example.treasure.model.Date;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

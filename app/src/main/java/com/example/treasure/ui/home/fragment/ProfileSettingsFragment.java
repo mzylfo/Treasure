@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.treasure.R;
+import com.example.treasure.model.Result;
+import com.example.treasure.model.User;
+import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.ui.home.HomeActivity;
 import com.example.treasure.ui.welcome.WelcomeActivity;
+import com.example.treasure.ui.welcome.fragment.LoginFragment;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+
+
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
+import com.example.treasure.util.ServiceLocator;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -20,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
  * create an instance of this fragment.
  */
 public class ProfileSettingsFragment extends Fragment {
+    private UserViewModel userViewModel;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +71,11 @@ public class ProfileSettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+
+        userViewModel = new ViewModelProvider(requireActivity(), new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @Override
@@ -76,13 +93,15 @@ public class ProfileSettingsFragment extends Fragment {
         });
         */
 
-        Button logOutButton = view.findViewById(R.id.log_out);
-
-        logOutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), WelcomeActivity.class);
-            startActivity(intent);
+        view.findViewById(R.id.log_out).setOnClickListener(v -> {
+            userViewModel.logout();
+            goToNextPage(view);
         });
 
         return view;
+    }
+
+    private void goToNextPage(View view) {
+        startActivity(new Intent(getContext(), LoginFragment.class));
     }
 }

@@ -14,7 +14,7 @@ import com.example.treasure.repository.weather.WeatherResponseCallback;
 import com.example.treasure.source.event.BaseEventLocalDataSource;
 import com.example.treasure.source.feeling.BaseFeelingLocalDataSource;
 import com.example.treasure.source.user.BaseUserAuthenticationRemoteDataSource;
-import com.example.treasure.source.user.BaseUserDataRemoteDataSource;
+import com.example.treasure.source.user.BaseUserRemoteDataSource;
 import com.example.treasure.source.weather.BaseWeatherLocalDataSource;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     private static final String TAG = UserRepository.class.getSimpleName();
 
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
-    private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
+    private final BaseUserRemoteDataSource userDataRemoteDataSource;
     private final BaseEventLocalDataSource eventLocalDataSource;
     private final BaseFeelingLocalDataSource feelingLocalDataSource;
 
@@ -38,7 +38,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     private final MutableLiveData<Result> userFeelingsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
-                          BaseUserDataRemoteDataSource userDataRemoteDataSource,
+                          BaseUserRemoteDataSource userDataRemoteDataSource,
                           BaseWeatherLocalDataSource weatherLocalDataSource,
                           BaseEventLocalDataSource eventLocalDataSource,
                           BaseFeelingLocalDataSource feelingLocalDataSource) {
@@ -136,7 +136,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
 
     @Override
     public void onSuccessFromRemoteDatabase(User user) {
-        Result.UserSuccess result = new Result.UserSuccess(user);
+        Result.User result = new Result.User(user);
         userMutableLiveData.postValue(result);
     }
 
@@ -172,7 +172,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
-    public void onFailureFromRemote(Exception exception) {
+    public void onFailureFromRemote(String exception) {
 
     }
 
@@ -183,6 +183,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
 
     @Override
     public void onFailureFeelingFromLocal(Exception exception) {
+
+    }
+
+    @Override
+    public void onFailureFromRemote(Exception exception) {
 
     }
 
@@ -202,9 +207,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
-    public void onFailureFromLocal(Exception exception) {
+    public void onFailureFromLocal(String exception) {
 
     }
+
 
     @Override
     public void onDeleteFeeling(Feeling f) {

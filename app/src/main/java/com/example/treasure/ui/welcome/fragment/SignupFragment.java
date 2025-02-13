@@ -89,7 +89,7 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    User user = ((Result.UserSuccess) result).getData();
+                                    User user = ((Result.User) result).getUserData();
                                     //saveLoginData(email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
                                     goToNextPage(view);
