@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,8 +22,12 @@ import com.example.treasure.R;
 import com.example.treasure.adapter.EventRecyclerAdapter;
 import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
+import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
 import com.example.treasure.util.DateParser;
 import com.example.treasure.util.JSONParserUtils;
+import com.example.treasure.util.ServiceLocator;
 import com.example.treasure.util.TimeParser;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -45,6 +50,8 @@ public class NewEventFragment extends BottomSheetDialogFragment {
     private TextView selectedDateTextView, selectedTimeTextView;
     private Calendar eventCalendar = Calendar.getInstance();
 
+    private UserViewModel userViewModel;
+
     public static NewEventFragment newInstance(String date) {
         NewEventFragment fragment = new NewEventFragment();
         Bundle args = new Bundle();
@@ -59,6 +66,10 @@ public class NewEventFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             selectedDate = getArguments().getString(ARG_DATE);
         }
+
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(requireActivity(), new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @SuppressLint("SetTextI18n")
@@ -128,6 +139,12 @@ public class NewEventFragment extends BottomSheetDialogFragment {
             db.eventDAO().insert(newEvent);
             requireActivity().getSupportFragmentManager().setFragmentResult("event_added", new Bundle());
         }).start();
+
+        userViewModel.saveUserEvent(
+                eventName, eventDate, eventTime,
+                userViewModel.getLoggedUser().getIdToken());
+
+
 
         dismiss();
     }
