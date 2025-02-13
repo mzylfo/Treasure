@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/yellow_app"/> <!-- Usa il colore dal tema -->
+    <corners android:radius="70dp"/> <!-- Raggio degli angoli arrotondati -->
+</shape>

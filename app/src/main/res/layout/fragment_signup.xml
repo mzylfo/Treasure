@@ -39,17 +39,17 @@
             android:text="@string/create_account"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <Button
+        <!--<Button
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             app:icon="@drawable/google"
-            android:id="@+id/outlinedButtonGoogle"
+            android:id="@+id/signUpGoogle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_with_google"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:textColor="@color/black"
-            />
+            />-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

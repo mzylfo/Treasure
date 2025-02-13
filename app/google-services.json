@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "237967129529",
+    "firebase_url": "https://treasurelive-97ebf-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "treasurelive-97ebf",
+    "storage_bucket": "treasurelive-97ebf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237967129529:android:01768b384dc15a64215468",
+        "android_client_info": {
+          "package_name": "com.example.treasure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237967129529-aoljem0bqcfsvs46k0hdvqkq4vde8l1l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.treasure",
+            "certificate_hash": "99107ab8e2fd77d65f6673ff2a7087c6dfc5d239"
+          }
+        },
+        {
+          "client_id": "237967129529-t5bet849imb0j4pnh2cn6lgkmpkeuuji.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWO042h-XjBmWIrHgfXnYLN4gNUBzVCTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237967129529-t5bet849imb0j4pnh2cn6lgkmpkeuuji.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
