@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation("com.google.firebase:firebase-bom:33.9.0")
     implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.firebase:firebase-database")
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     annotationProcessor(libs.room.compiler)
