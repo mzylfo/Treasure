@@ -144,8 +144,6 @@ public class NewEventFragment extends BottomSheetDialogFragment {
                 eventName, eventDate, eventTime,
                 userViewModel.getLoggedUser().getIdToken());
 
-
-
         dismiss();
     }
 

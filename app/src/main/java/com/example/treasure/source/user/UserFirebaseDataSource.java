@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Class that gets the user information using Firebase Realtime Database.
- */
 public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
 
     private static final String TAG = UserFirebaseDataSource.class.getSimpleName();
@@ -52,27 +49,17 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
                 } else {
                     Log.d(TAG, "User not present in Firebase Realtime Database");
                     databaseReference.child(FIREBASE_USERS_COLLECTION).child(user.getIdToken()).setValue(user)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    userResponseCallback.onSuccessFromRemoteDatabase(user);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    userResponseCallback.onFailureFromRemoteDatabase(e.getLocalizedMessage());
-                                }
-                            });
+                            .addOnSuccessListener(aVoid -> userResponseCallback.onSuccessFromRemoteDatabase(user))
+                            .addOnFailureListener(e -> userResponseCallback.onFailureFromRemoteDatabase(e.getLocalizedMessage()));
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 userResponseCallback.onFailureFromRemoteDatabase(error.getMessage());
             }
         });
     }
-
 
     @Override
     public void getUserEvents(String idToken) {
@@ -81,21 +68,18 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "Error getting data", task.getException());
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "Successful read: " + task.getResult().getValue());
 
                         List<Event> eventsList = new ArrayList<>();
-                        for(DataSnapshot ds : task.getResult().getChildren()) {
+                        for (DataSnapshot ds : task.getResult().getChildren()) {
                             Event event = ds.getValue(Event.class);
                             eventsList.add(event);
                         }
 
                         userResponseCallback.onSuccessEventsFromRemoteDatabase(eventsList);
                     }
-
                 });
-
     }
 
     @Override
@@ -105,12 +89,11 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "Error getting data", task.getException());
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "Successful read: " + task.getResult().getValue());
 
                         List<Feeling> feelingsList = new ArrayList<>();
-                        for(DataSnapshot ds : task.getResult().getChildren()) {
+                        for (DataSnapshot ds : task.getResult().getChildren()) {
                             Feeling feeling = ds.getValue(Feeling.class);
                             feelingsList.add(feeling);
                         }
@@ -122,20 +105,21 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
 
     @Override
     public void saveUserEvent(String title, String date, String time, String idToken) {
-
         Map<String, Object> eventValues = new HashMap<>();
         eventValues.put("title", title);
         eventValues.put("date", date);
         eventValues.put("time", time);
 
-        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_EVENT_COLLECTION).setValue(eventValues);
+        Log.e("miao", "miao");
 
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_EVENT_COLLECTION).push().setValue(eventValues)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Evento aggiunto con successo"))
+                .addOnFailureListener(e -> Log.w(TAG, "Errore nell'aggiungere l'evento", e));
     }
 
     @Override
     public void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken) {
-
         Map<String, Object> feelingValues = new HashMap<>();
         feelingValues.put("face", face);
         feelingValues.put("title", text);
@@ -144,8 +128,8 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
         feelingValues.put("condition", condition);
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FEELING_COLLECTION).setValue(feelingValues);
-
+                child(FIREBASE_FEELING_COLLECTION).push().setValue(feelingValues)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Sentimento aggiunto con successo"))
+                .addOnFailureListener(e -> Log.w(TAG, "Errore nell'aggiungere il sentimento", e));
     }
-
 }
