@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
@@ -22,23 +21,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.treasure.R;
-import com.example.treasure.model.Result;
-import com.example.treasure.model.User;
 import com.example.treasure.repository.user.IUserRepository;
 import com.example.treasure.ui.home.HomeActivity;
 import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
 import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
 import com.example.treasure.util.ServiceLocator;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -78,10 +71,12 @@ public class LoginFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
+        /*
         // Check if user is already signed in
         if (mAuth.getCurrentUser() != null) {
             goToNextPage();
         }
+         */
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartIntentSenderForResult(), activityResult -> {
@@ -151,6 +146,7 @@ public class LoginFragment extends Fragment {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
+                        retrieveUserInformation(userViewModel.getLoggedUser().getIdToken());
                         goToNextPage();
                     } else {
                         Log.e(TAG, "Login failed", task.getException());
@@ -165,6 +161,7 @@ public class LoginFragment extends Fragment {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Log.d(TAG, "Google login successful: " + (user != null ? user.getEmail() : "null"));
+                        retrieveUserInformation(userViewModel.getLoggedUser().getIdToken());
                         goToNextPage();
                     } else {
                         Log.e(TAG, "Firebase authentication with Google failed", task.getException());
@@ -175,5 +172,10 @@ public class LoginFragment extends Fragment {
     private void goToNextPage() {
         startActivity(new Intent(getContext(), HomeActivity.class));
         requireActivity().finish();
+    }
+
+    private void retrieveUserInformation(String user) {
+        userViewModel.getUserEvents(user);
+        userViewModel.getUserFeelings(user);
     }
 }

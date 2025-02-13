@@ -155,11 +155,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
         feelingLocalDataSource.insertFeelings(feelingList);
     }
 
-    /*@Override
-    public void onSuccessFromGettingUserPreferences() {
-        userPreferencesMutableLiveData.postValue(new Result.UserSuccess(null));
-    }*/
-
     @Override
     public void onFailureFromRemoteDatabase(String message) {
         Result.Error result = new Result.Error(message);
