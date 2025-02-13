@@ -3,6 +3,7 @@ package com.example.treasure.repository.user;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.treasure.model.Event;
 import com.example.treasure.model.Result;
 import com.example.treasure.model.User;
 
@@ -20,4 +21,5 @@ public interface IUserRepository {
     void signInWithGoogle(String token);
     void saveUserEvent(String title, String date, String time, String idToken);
     void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken);
+    void deleteUserEvent(Event event, String idToken);
 }

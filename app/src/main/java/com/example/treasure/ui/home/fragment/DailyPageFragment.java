@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,12 +26,17 @@ import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.database.FeelingRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
+import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
+import com.example.treasure.util.ServiceLocator;
 
 import java.util.List;
 
 public class DailyPageFragment extends DialogFragment {
 
     private static final String ARG_DATE = "date";
+    private UserViewModel userViewModel;
 
     public static DailyPageFragment newInstance(String selectedDate) {
         DailyPageFragment fragment = new DailyPageFragment();
@@ -81,6 +87,11 @@ public class DailyPageFragment extends DialogFragment {
             newEventFragment.show(getParentFragmentManager(), newEventFragment.getTag());
         });*/
 
+
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(requireActivity(), new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
+
         return view;
     }
 
@@ -96,6 +107,9 @@ public class DailyPageFragment extends DialogFragment {
                         EventRoomDatabase.getDatabase(getContext()).eventDAO().delete(event);
                         // Mostra un messaggio di conferma
                         Toast.makeText(getContext(), "Evento eliminato", Toast.LENGTH_SHORT).show();
+                        userViewModel.deleteUserEvent(
+                                event,
+                                userViewModel.getLoggedUser().getIdToken());
                         // Ricarica la lista degli eventi
                         reloadEventList();
                         //Ricarica i next Events

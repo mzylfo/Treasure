@@ -3,10 +3,12 @@ package com.example.treasure.source.user;
 
 import static com.example.treasure.util.Constants.*;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -132,4 +134,35 @@ public class UserFirebaseDataSource extends BaseUserRemoteDataSource {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Sentimento aggiunto con successo"))
                 .addOnFailureListener(e -> Log.w(TAG, "Errore nell'aggiungere il sentimento", e));
     }
+
+    @Override
+    public void deleteUserEvent(Event e, String idToken){
+        // Prima recuperiamo tutti gli eventi dell'utente
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken)
+                .child(FIREBASE_EVENT_COLLECTION).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Se la lettura è riuscita, iteriamo attraverso gli eventi per trovare quello giusto
+                        DataSnapshot eventsSnapshot = task.getResult();
+                        for (DataSnapshot snapshot : eventsSnapshot.getChildren()) {
+                            Event event = snapshot.getValue(Event.class);
+
+                            // Qui confronti i dati dell'evento per identificare quello da eliminare.
+                            // In questo esempio, stiamo confrontando con l'ID dell'evento.
+                            if (event != null && event.getDate().equals(e.getDate()) && event.getTime().equals(e.getTime()) && event.getTitle().equals(e.getTitle())) {
+                                // Se l'evento corrisponde a quello che vogliamo eliminare, rimuoviamo l'evento
+                                String eventId = snapshot.getKey(); // Ottieni la chiave dell'evento (ID univoco generato da Firebase)
+                                databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken)
+                                        .child(FIREBASE_EVENT_COLLECTION).child(eventId).removeValue()
+                                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Evento eliminato con successo"))
+                                        .addOnFailureListener(ex -> Log.w(TAG, "Errore nell'eliminare l'evento", ex));
+                                return; // Fermiamo il ciclo dopo aver trovato ed eliminato l'evento
+                            }
+                        }
+                        Log.d(TAG, "Evento non trovato");
+                    } else {
+                        Log.w(TAG, "Errore nella lettura degli eventi", task.getException());
+                    }
+                });
+}
+
 }

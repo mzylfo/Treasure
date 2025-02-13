@@ -11,12 +11,17 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.treasure.R;
 import com.example.treasure.database.EventRoomDatabase;
 import com.example.treasure.database.FeelingRoomDatabase;
 import com.example.treasure.model.Event;
 import com.example.treasure.model.Feeling;
+import com.example.treasure.repository.user.IUserRepository;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModel;
+import com.example.treasure.ui.welcome.viewmodel.UserViewModelFactory;
+import com.example.treasure.util.ServiceLocator;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.ParseException;
@@ -31,6 +36,7 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
     private static final String ARG_FEELING = "feeling";
     private static final String ARG_DATE = "date";
     private static final String ARG_CONDITION = "condition";
+    private UserViewModel userViewModel;
 
     public static NewFeelingFragment newInstance(int feeling, String date, String condition) {
         NewFeelingFragment fragment = new NewFeelingFragment();
@@ -51,8 +57,7 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
         saveEntryButton = view.findViewById(R.id.save_entry_button);
         cancelButton = view.findViewById(R.id.cancel_button);
 
-
-        saveEntryButton.setOnClickListener(v -> saveEvent());
+        saveEntryButton.setOnClickListener(v -> saveFeeling());
 
         cancelButton.setOnClickListener(v -> {
             dismiss();  // Chiude il BottomSheetDialog
@@ -61,11 +66,15 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
             getParentFragmentManager().popBackStack(); // Togli il fragment corrente dallo stack di navigazione
         });
 
+        IUserRepository userRepository = ServiceLocator.getInstance().getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(requireActivity(), new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
+
         return view;
 
     }
 
-    private void saveEvent(){
+    private void saveFeeling(){
         if (getArguments() != null) {
             int entryFace = getArguments().getInt(ARG_FEELING);
             String date = getArguments().getString(ARG_DATE);
@@ -79,10 +88,18 @@ public class NewFeelingFragment extends BottomSheetDialogFragment {
             // Ottieni l'istanza del database
             FeelingRoomDatabase db = FeelingRoomDatabase.getDatabase(getContext());
 
+            userViewModel.saveUserFeeling(
+                    entryFace, entryText, date, time, condition,
+                    userViewModel.getLoggedUser().getIdToken());
+
             // Inserisci l'evento nel database
             new Thread(() -> {
                 db.feelingDAO().insert(newFeeling);
             }).start();
+
+           // Log.e("Errore", userViewModel.getLoggedUser().getIdToken().toString());
+
+
         }
 
         dismiss();

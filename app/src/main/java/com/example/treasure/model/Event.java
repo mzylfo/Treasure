@@ -11,6 +11,10 @@ public class Event {
     private String date;
     private String time;
 
+    public Event() {
+        // Firebase richiede un costruttore vuoto
+    }
+
     // Costruttore
     public Event(String title, String date, String time) {
         this.title = title;

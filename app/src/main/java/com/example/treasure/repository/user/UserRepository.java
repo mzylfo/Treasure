@@ -117,6 +117,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
     }
 
     @Override
+    public void deleteUserEvent(Event event, String idToken) {
+        userDataRemoteDataSource.deleteUserEvent(event, idToken);
+    }
+
+    @Override
     public void saveUserFeeling(int face, String text, String date, String time, String condition, String idToken) {
         userDataRemoteDataSource.saveUserFeeling(face, text, date, time, condition, idToken);
     }
@@ -142,12 +147,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback, We
 
     @Override
     public void onSuccessEventsFromRemoteDatabase(List<Event> eventsList) {
-
+        eventLocalDataSource.insertEvents(eventsList);
     }
 
     @Override
     public void onSuccessFeelingsFromRemoteDatabase(List<Feeling> feelingList) {
-
+        feelingLocalDataSource.insertFeelings(feelingList);
     }
 
     /*@Override

@@ -42,11 +42,19 @@ public class ProfileSettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
-        TextView userEmailTextView = view.findViewById(R.id.user_email);
+        TextView userWelcomeTextView = view.findViewById(R.id.user_email);
+        TextView userEmail2TextView = view.findViewById(R.id.user_email_2);
+        TextView userNameTextView = view.findViewById(R.id.user_name);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String email = currentUser.getEmail();
-            userEmailTextView.setText("Hi " + email);
+            String name = "";
+            if (!(email == null)) {
+                name = email.substring(0, email.indexOf('@'));
+            }
+            userWelcomeTextView.setText("Hi " + name);
+            userNameTextView.setText(name);
+            userEmail2TextView.setText(email);
         }
 
         Button logoutButton = view.findViewById(R.id.log_out);

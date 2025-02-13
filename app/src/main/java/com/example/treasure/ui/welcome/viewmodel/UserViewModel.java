@@ -3,6 +3,7 @@ package com.example.treasure.ui.welcome.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.treasure.model.Event;
 import com.example.treasure.model.Result;
 import com.example.treasure.model.User;
 import com.example.treasure.repository.user.IUserRepository;
@@ -75,14 +76,18 @@ public class UserViewModel extends ViewModel {
         }
     }
 
+    public void deleteUserEvent (Event event, String idToken) {
+        if (idToken != null) {
+            userRepository.deleteUserEvent(event, idToken);
+        }
+    }
+
     public MutableLiveData<Result> getUserFeelings(String idToken) {
         if (idToken != null) {
             userFeelingsMutableLiveData = userRepository.getUserFeelings(idToken);
         }
         return userFeelingsMutableLiveData;
     }
-
-
 
 
     public User getLoggedUser() {
